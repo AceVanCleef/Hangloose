@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Hangloose</title>
-</head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="css/style.css"></head>
 <body>
 
 <header id="page_header">
@@ -11,21 +14,22 @@
 </header>
 
 
-<main>
+<main class="grid-container">
+    <section class="row">
 
-    <div id="io_wrapper">
-        <h2>Suche nach Destination</h2>
-        <!-- ToDo: define form action -->
-        <form>
-            <input type="text" name="surf_location"/>
-            <button>GO!</button>
-        </form>
-    </div>
+        <div id="io_wrapper" class="col-6">
+            <h2>Suche nach Destination</h2>
+            <!-- ToDo: define form action -->
+            <form>
+               <input type="text" name="surf_location"/>
+               <button>GO!</button>
+            </form>
+        </div>
 
-    <div id="map_wrapper">
+        <div id="map_wrapper" class="col-6">
 
-    </div>
-
+        </div>
+    </section>
 </main>
 
 
