@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hangloose Captcha</title>
+<style>
+body{
+background-color: #430000;
+margin: 50px;
+}
+
+
+.invalid input:required:invalid {
+    background: #BE4C54;
+}
+
+.invalid input:required:valid {
+    background: #17D654 ;
+}
+
+input {
+  display: inline;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+<form class="validate-form" method="post" action="neueSeite.html">
+<span style="color:#FFF">Was ist <span id="no1"></span> plus <span id="no2"></span>?</span>
+<input name="answer" id="Antwort"  pattern="7" title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist" placeholder="Gib eine Zahl ein" required>
+<input type="submit">
+</form>
+<span id="status" style="display:none">Unsubmitted</span>
+<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
+<script type="text/javascript" src="captcha.js"></script>
+<script>placenumber();</script>
+</body>
+</html>
