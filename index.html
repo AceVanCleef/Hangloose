@@ -6,8 +6,15 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" type="text/css" href="css/style.css"></head>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
 <body>
+
 
 <header id="page_header">
     <h1>Tide predictions for any location in the world</h1>
@@ -21,13 +28,18 @@
             <h2>Suche nach Destination</h2>
             <!-- ToDo: define form action -->
             <form>
-               <input type="text" name="surf_location"/>
-               <button>GO!</button>
+                <input type="text" name="surf_location"/>
+                <button>GO!</button>
             </form>
         </div>
 
         <div id="map_wrapper" class="col-6">
 
+        </div>
+    </section>
+    <section class="row">
+        <div class="col-6">
+            <div id="chartContainer"></div>
         </div>
     </section>
 </main>
@@ -38,14 +50,5 @@
         &copy;2016 by team hangloose.
     </p>
 </footer>
-
-
-
-
-
-
-
-
-
 </body>
 </html>
