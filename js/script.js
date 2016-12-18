@@ -1,3 +1,12 @@
+$(document).ready(function () {
+    $(document.body).find('#io_wrapper').on('click', 'button', function (event) {
+        event.preventDefault();
+        var searchQuery = $('#search_input').val();
+        // TODO: search for locations and autocomplete them
+
+    });
+});
+
 
 $(function () {
     Highcharts.chart('chartContainer', {
@@ -5,12 +14,12 @@ $(function () {
             type: 'area'
         },
         /*title: {
-            text: 'US and USSR nuclear stockpiles'
-        },*/
+         text: 'US and USSR nuclear stockpiles'
+         },*/
         /*subtitle: {
-            text: 'Source: <a href="http://thebulletin.metapress.com/content/c4120650912x74k7/fulltext.pdf">' +
-            'thebulletin.metapress.com</a>'
-        },*/
+         text: 'Source: <a href="http://thebulletin.metapress.com/content/c4120650912x74k7/fulltext.pdf">' +
+         'thebulletin.metapress.com</a>'
+         },*/
         xAxis: {
             allowDecimals: false,
             labels: {
@@ -69,3 +78,4 @@ $(function () {
     });
 
 });
+
