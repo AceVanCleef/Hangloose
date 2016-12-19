@@ -59,7 +59,7 @@
         [class*="col-"] {
             float: left;
             padding: 15px;
-            border: 1px solid red;
+            border: 1px solid black;    /*  Nur um Divs besser zu sehen, später löschen */
         }
 
         /* hide mechanic */
@@ -125,6 +125,11 @@
 
     div {
         background: #333333;
+    }
+
+    .col-md-4 {                  /* Datenanzeige nebeneinander */
+        width: 50%;
+        padding: 5px;
     }
 
 /* END of look and feel section */
