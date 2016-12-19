@@ -91,7 +91,7 @@
 
     /* other layouting */
         header, footer {
-            border: 1px solid red;
+            border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
             padding: 15px;
             margin: -15px;
         }
