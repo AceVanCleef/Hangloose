@@ -114,6 +114,7 @@
     body {
 
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Large_breaking_wave.jpg");
+        /* background-image:url(/img/back1.jpg);*/
         width: 100%;
         height: 100%;
 
