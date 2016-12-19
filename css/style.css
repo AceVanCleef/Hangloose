@@ -150,6 +150,9 @@ div {
         text-space: 20px;
         color: #000000;
         font-weight: bold;
+        border-radius: 64px 64px 64px 64px;
+        -moz-border-radius: 64px 64px 64px 64px;
+        -webkit-border-radius: 64px 64px 64px 64px;
 
         float: left;
         width: 150px;
