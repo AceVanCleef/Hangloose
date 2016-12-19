@@ -13,6 +13,7 @@
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
 <body>
 
 
@@ -25,7 +26,18 @@
     <section class="row">
 
         <div id="io_wrapper" class="col-6">
+
+            <nav>
+                <a id="ratingsLink" href="#">Ratings</a>
+                <a id="ratingsabgebenLink" href="#">Rating abgeben</a>
+                <a id="destinationsuchenLink" href="#">Destination suchen</a>
+            </nav>
+
+
+
+            <div>
             <h2>Suche nach Destination</h2>
+            </div>
             <!-- ToDo: define form action -->
             <form>
                 <input type="text" id="search_input"/>
@@ -34,12 +46,43 @@
         </div>
 
         <div id="map_wrapper" class="col-6">
-
+GOOGLE MAPS KARTE
         </div>
     </section>
+
+
     <section class="row">
+
         <div class="col-6">
-            <div id="chartContainer"></div>
+            <section id="ratings">
+
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+            </section>
+
+            <section id="ratingsabgeben">
+                <form action="textarea.html" method="post">
+                    <div>
+                        <label for="text">Gib Dein Rating des Surfspots ab</label>
+                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
+                        <input type="submit" value="Senden" />
+                    </div>
+                </form>
+            </section>
+
+            <section id="destinationsuchen">
+                <div id="chartContainer"></div>
+            </section>
         </div>
     </section>
 </main>
@@ -47,7 +90,7 @@
 
 <footer id="page_footer">
     <p>
-        &copy;2016 by team hangloose.
+        &copy;2016 by Team Hangloose.
     </p>
 </footer>
 </body>
