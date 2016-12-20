@@ -28,7 +28,7 @@ $(document).ready(function () {
         $(document.body).find('#destinationsuchen').hide();
     });
 
-
+   placenumber();
 
 });
 

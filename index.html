@@ -14,10 +14,12 @@
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
+<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
+<script type="text/javascript" src="js/captcha.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
 </script>
-<script type="text/javascript" src="js/script.js"></script>
 <body>
 
 
@@ -73,15 +75,32 @@
                     Mauris placerat eleifend leo.</p>
             </section>
 
+
             <section id="ratingsabgeben">
                 <form action="textarea.html" method="post">
                     <div>
-                        <label for="text">Gib Dein Rating des Surfspots ab</label>
-                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                        <input type="submit" value="Senden"/>
+
+                                                <label for="text">Gib Dein Rating des Surfspots ab</label>
+                                                <textarea id="text" name="text" cols="45" rows="12"></textarea>
+                                                <!--<input type="submit" value="Senden"/> -->
+
+
+
+                        <form class="validate-form" method="post" action="neueSeite.html">
+                            <span style="color:#FFF">Rating senden : Wieviele Haifische ergeben: <span id="no1"></span> plus <span
+                                    id="no2"></span>?</span>
+                            <input name="answer" id="Antwort" pattern="7"
+                                   title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
+                                   placeholder="Gib eine Zahl ein" required>
+                            <input type="submit">
+                        </form>
+                        <span id="status" style="display:none">Unsubmitted</span>
+
+
                     </div>
                 </form>
             </section>
+
 
             <section id="destinationsuchen">
 
