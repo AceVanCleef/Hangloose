@@ -158,7 +158,7 @@ $(function () {
                         return {
                             label: loc.formatted_address,
                             value: loc.formatted_address,
-                            bounds: loc.geometry.bounds
+                            pos: loc.geometry.location
                         }
                     }));
                 }
@@ -167,11 +167,10 @@ $(function () {
         select: function (event, ui) {
           /*  var pos = ui.item.position;
             var lct = ui.item.locType;*/
-            var bounds = ui.item.bounds;
+            var pos = ui.item.pos;
 
-            if (bounds) {
-                alert(bounds);
-                map.fitBounds(bounds);
+            if (pos) {
+                setLocationMarker(pos);
             }
         }
     });
