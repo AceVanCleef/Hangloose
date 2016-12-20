@@ -16,6 +16,10 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map_wrapper'), {
         zoom: 8
     });
+
+    map.addListener('click', function(e) {
+        setLocationMarker(e.latLng, map);
+    });
     //infoWindow = new google.maps.InfoWindow({map: map});
 
 
