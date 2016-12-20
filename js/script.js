@@ -11,30 +11,43 @@ $(document).ready(function () {
  * Initialize a Google Maps into the section with Geolocation.
  */
 function initMap() {
-    var map = new google.maps.Map(document.getElementById('map_wrapper'), {
-        center: {lat: -34.397, lng: 150.644},
+    var map, pos;
+    pos = { lat: -34.397, lng: 150.644 };
+    map = new google.maps.Map(document.getElementById('map_wrapper'), {
         zoom: 8
     });
-    var infoWindow = new google.maps.InfoWindow({map: map});
+    //infoWindow = new google.maps.InfoWindow({map: map});
+
 
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
+            pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            map.setCenter(pos);
+            //infoWindow.setPosition(pos);
+            //infoWindow.setContent('Location found.');
+
+            setLocationMarker(pos, map);
         }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
+            //handleLocationError(true, infoWindow, map.getCenter());
+            setLocationMarker(pos, map);
         });
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
+        //handleLocationError(false, infoWindow, map.getCenter());
+        setLocationMarker(pos, map);
     }
+}
+
+function setLocationMarker(pos, map) {
+    var marker = new google.maps.Marker({
+        position: pos
+    });
+    map.setCenter(pos);
+    marker.setMap(map);
 }
 
 /**
