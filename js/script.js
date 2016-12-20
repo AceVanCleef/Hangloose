@@ -50,6 +50,12 @@ function initMap() {
         //handleLocationError(false, infoWindow, map.getCenter());
         setLocationMarker(pos);
     }
+
+    var geocoder = new google.maps.Geocoder();
+
+    document.getElementById('search_button').addEventListener('click', function() {
+        geocodeAddress(geocoder, map);
+    });
 }
 
 function setLocationMarker(pos) {
@@ -69,6 +75,18 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setContent(browserHasGeolocation ?
         'Error: The Geolocation service failed.' :
         'Error: Your browser doesn\'t support geolocation.');
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+    var address = document.getElementById('search_input').value;
+    geocoder.geocode({'address': address}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            resultsMap.setCenter(results[0].geometry.location);
+            setLocationMarker(results[0].geometry.location);
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
 }
 
 $(function () {
