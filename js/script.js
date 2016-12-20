@@ -7,18 +7,24 @@ $(document).ready(function () {
     });
 });
 
+var marker, map;
+
 /**
  * Initialize a Google Maps into the section with Geolocation.
  */
 function initMap() {
-    var map, pos;
+    var pos;
     pos = { lat: -34.397, lng: 150.644 };
     map = new google.maps.Map(document.getElementById('map_wrapper'), {
         zoom: 8
     });
 
+    marker = new google.maps.Marker({
+        position: pos
+    });
+
     map.addListener('click', function(e) {
-        setLocationMarker(e.latLng, map);
+        setLocationMarker(e.latLng);
     });
     //infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -34,22 +40,20 @@ function initMap() {
             //infoWindow.setPosition(pos);
             //infoWindow.setContent('Location found.');
 
-            setLocationMarker(pos, map);
+            setLocationMarker(pos);
         }, function() {
             //handleLocationError(true, infoWindow, map.getCenter());
-            setLocationMarker(pos, map);
+            setLocationMarker(pos);
         });
     } else {
         // Browser doesn't support Geolocation
         //handleLocationError(false, infoWindow, map.getCenter());
-        setLocationMarker(pos, map);
+        setLocationMarker(pos);
     }
 }
 
-function setLocationMarker(pos, map) {
-    var marker = new google.maps.Marker({
-        position: pos
-    });
+function setLocationMarker(pos) {
+    marker.setPosition(pos);
     map.setCenter(pos);
     marker.setMap(map);
 }
