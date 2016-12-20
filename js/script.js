@@ -10,24 +10,59 @@ $(document).ready(function () {
     $(document.body).find('#ratingsabgeben').hide();
 
 
-    $(document.body).find('nav').on('click', '#destinationsuchenLink', function(event) {
+    $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
         $(document.body).find('#ratings').hide();
         $(document.body).find('#ratingsabgeben').hide();
         $(document.body).find('#destinationsuchen').show();
     });
 
-    $(document.body).find('nav').on('click', '#ratingsLink', function(event) {
+    $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
         $(document.body).find('#ratings').show();
         $(document.body).find('#ratingsabgeben').hide();
         $(document.body).find('#destinationsuchen').hide();
     });
 
-    $(document.body).find('nav').on('click', '#ratingsabgebenLink', function(event) {
+    $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
         $(document.body).find('#ratings').hide();
         $(document.body).find('#ratingsabgeben').show();
         $(document.body).find('#destinationsuchen').hide();
     });
 
+    $("#search_input").autocomplete({
+        minLength: 3,
+        source: function (request, response) {
+            geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({
+                'address': request.term
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    /*var searchLoc = results[0].geometry.location;
+                     var lat = results[0].geometry.location.lat();
+                     var lng = results[0].geometry.location.lng();
+                     var latlng = new google.maps.LatLng(lat, lng);
+                     var bounds = results[0].geometry.bounds;*/
+
+                    response($.map(results, function (loc) {
+                        return {
+                            label: loc.formatted_address,
+                            value: loc.formatted_address,
+                            pos: loc.geometry.location
+                        }
+                    }));
+                }
+            });
+        },
+        select: function (event, ui) {
+            /*  var pos = ui.item.position;
+             var lct = ui.item.locType;*/
+            var pos = ui.item.pos;
+
+            if (pos) {
+                setLocationMarker(pos);
+            }
+        }
+    });
    placenumber();
 
 });
@@ -84,9 +119,18 @@ function initMap() {
 }
 
 function setLocationMarker(pos) {
+    getTideData(pos, function () {
+        alert("error");
+    }, function (tideData) {
+        alert(tideData.requestLat);
+    });
     marker.setPosition(pos);
     map.setCenter(pos);
     marker.setMap(map);
+}
+
+function showTideData() {
+
 }
 
 /**
@@ -114,66 +158,22 @@ function geocodeAddress(geocoder, resultsMap) {
     });
 }
 
-$(function () {
-    var availableTags = [
-        "ActionScript",
-        "AppleScript",
-        "Asp",
-        "BASIC",
-        "C",
-        "C++",
-        "Clojure",
-        "COBOL",
-        "ColdFusion",
-        "Erlang",
-        "Fortran",
-        "Groovy",
-        "Haskell",
-        "Java",
-        "JavaScript",
-        "Lisp",
-        "Perl",
-        "PHP",
-        "Python",
-        "Ruby",
-        "Scala",
-        "Scheme"
-    ];
-    $("#search_input").autocomplete({
-        minLength: 3,
-        source: function (request, response) {
-            geocoder = new google.maps.Geocoder();
-
-            geocoder.geocode({
-                'address': request.term
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    /*var searchLoc = results[0].geometry.location;
-                    var lat = results[0].geometry.location.lat();
-                    var lng = results[0].geometry.location.lng();
-                    var latlng = new google.maps.LatLng(lat, lng);
-                    var bounds = results[0].geometry.bounds;*/
-
-                    response($.map(results, function (loc) {
-                        return {
-                            label: loc.formatted_address,
-                            value: loc.formatted_address,
-                            pos: loc.geometry.location
-                        }
-                    }));
-                }
-            });
+function getTideData(pos, errorFunction, successFunction) {
+    $.ajax({
+        url: 'https://www.worldtides.info/api?heights&key=9ce9447c-6193-48a6-acf4-16d43c8b0915&lat=' + pos.lat + '&lon=' + pos.lng,
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true,
+        error: function (msg) {
+            errorFunction(msg)
         },
-        select: function (event, ui) {
-          /*  var pos = ui.item.position;
-            var lct = ui.item.locType;*/
-            var pos = ui.item.pos;
-
-            if (pos) {
-                setLocationMarker(pos);
-            }
+        success: function (data) {
+            successFunction(data);
         }
     });
+}
+
+$(function () {
 
     Highcharts.chart('chartContainer', {
         chart: {
