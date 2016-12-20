@@ -12,8 +12,10 @@
 
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/highcharts.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
+</script>
 <script type="text/javascript" src="js/script.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
 <body>
 
 
@@ -35,9 +37,8 @@
             </nav>
 
 
-
             <div>
-            <h2>Suche nach Destination</h2>
+                <h2>Suche nach Destination</h2>
             </div>
             <!-- ToDo: define form action -->
             <form>
@@ -46,9 +47,7 @@
             </form>
         </div>
 
-        <div id="map_wrapper" class="col-6">
-GOOGLE MAPS KARTE
-        </div>
+        <div id="map_wrapper" class="col-6"></div>
     </section>
 
 
@@ -76,7 +75,7 @@ GOOGLE MAPS KARTE
                     <div>
                         <label for="text">Gib Dein Rating des Surfspots ab</label>
                         <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                        <input type="submit" value="Senden" />
+                        <input type="submit" value="Senden"/>
                     </div>
                 </form>
             </section>
@@ -93,16 +92,19 @@ GOOGLE MAPS KARTE
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="Dein aktueller Ort">Dein aktueller Ort</label>
                             <div class="col-md-4">
-                                <input id="Dein aktueller Ort" name="Dein aktueller Ort" placeholder="Du befindest Dich hier" class="form-control input-md" type="text">
+                                <input id="Dein aktueller Ort" name="Dein aktueller Ort"
+                                       placeholder="Du befindest Dich hier" class="form-control input-md" type="text">
 
                             </div>
                         </div>
 
                         <!-- Text input-->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="Koordinaten Deines Orts">Koordinaten von Deinem Ort</label>
+                            <label class="col-md-4 control-label" for="Koordinaten Deines Orts">Koordinaten von Deinem
+                                Ort</label>
                             <div class="col-md-4">
-                                <input id="Koordinaten Deines Orts" name="Koordinaten Deines Orts" placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
+                                <input id="Koordinaten Deines Orts" name="Koordinaten Deines Orts"
+                                       placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
 
                             </div>
                         </div>
@@ -111,16 +113,19 @@ GOOGLE MAPS KARTE
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="Surfspot">Nächster Surfspot</label>
                             <div class="col-md-4">
-                                <input id="Surfspot" name="Surfspot" placeholder="Surfspot" class="form-control input-md" type="text">
+                                <input id="Surfspot" name="Surfspot" placeholder="Surfspot"
+                                       class="form-control input-md" type="text">
 
                             </div>
                         </div>
 
                         <!-- Text input-->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="Koordinaten Deines Surfspots">Koordinaten Deines Surfspots</label>
+                            <label class="col-md-4 control-label" for="Koordinaten Deines Surfspots">Koordinaten Deines
+                                Surfspots</label>
                             <div class="col-md-4">
-                                <input id="Koordinaten Deines Surfspots" name="Koordinaten Deines Surfspots" placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
+                                <input id="Koordinaten Deines Surfspots" name="Koordinaten Deines Surfspots"
+                                       placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
 
                             </div>
                         </div>
@@ -133,7 +138,6 @@ GOOGLE MAPS KARTE
         </div>
     </section>
 </main>
-
 
 <footer id="page_footer">
     <p>

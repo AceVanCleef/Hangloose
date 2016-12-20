@@ -90,13 +90,25 @@
 /* TODO: if background images, then use img files with diff. dimensions and media queries OR <picture> */
 
     /* other layouting */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         header, footer {
             border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
             padding: 15px;
             margin: -15px;
         }
+
         header > *, footer > * {
             text-align: center;
+        }
+
+        #map_wrapper {
+            height: 300px;
+            padding: 0;
         }
     /* END of other layouting */
 
@@ -125,7 +137,7 @@
 
 
     div {
-        background: #333333;
+        //background: #333333; //otherwise the map wont be shown
     }
 
     .col-md-4 {                  /* Datenanzeige nebeneinander */
@@ -136,7 +148,7 @@
 /* END of look and feel section */
 
 div {
-    background: #00BFFF;
+    //background: #00BFFF; //otherwise the map wont be shown
 
     }
 
