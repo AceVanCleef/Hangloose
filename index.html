@@ -80,21 +80,26 @@
                 <form action="textarea.html" method="post">
                     <div>
 
-                                                <label for="text">Gib Dein Rating des Surfspots ab</label>
-                                                <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                                                <!--<input type="submit" value="Senden"/> -->
-
+                        <label for="text">Gib Dein Rating des Surfspots ab</label>
+                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
+                        <!--<input type="submit" value="Senden"/> -->
 
 
                         <form class="validate-form" method="post" action="neueSeite.html">
-                            <span style="color:#FFF">Rating senden : Wieviele Haifische ergeben: <span id="no1"></span> plus <span
+                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span id="no1"></span> plus <span
                                     id="no2"></span>?</span>
                             <input name="answer" id="Antwort" pattern="7"
                                    title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
                                    placeholder="Gib eine Zahl ein" required>
-                            <input type="submit"  value="senden">
-                        </form>
-                        <span id="status" style="display:none">Unsubmitted</span>
+                            <input type="submit" value="senden">
+
+                            <label for="text">Lade Bilder Dieses Surfspots hoch</label>
+                            <form action="upload.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="datei"><br>
+                                <input type="submit" value="Ausgewählte Datei Hochladen">
+
+                            </form>
+                            <span id="status" style="display:none">Unsubmitted</span>
 
 
                     </div>
