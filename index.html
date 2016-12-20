@@ -30,7 +30,7 @@
 <main class="grid-container">
     <section class="row">
 
-        <div id="io_wrapper" class="col-6">
+        <section id="io_wrapper" class="col-6">
 
             <nav>
                 <a id="ratingsLink" href="#">Ratings</a>
@@ -39,38 +39,66 @@
             </nav>
 
 
-            <div>
-                <h2>Suche nach Destination</h2>
-            </div>
+            <h2>Suche nach Destination</h2>
+
             <!-- ToDo: define form action -->
             <form>
                 <input type="text" id="search_input"/>
                 <button id="search_button">GO!</button>
                 <button id="location_button">My Location!</button>
             </form>
-        </div>
-
-        <div id="map_wrapper" class="col-6"></div>
-    </section>
 
 
-    <section class="row">
+            <section id="destinationsuchen">
+                <form>
+                    <fieldset>
 
-        <div class="col-6">
-            <section id="ratings">
+                        <!-- Form Name -->
+                        <legend>Hangloose Datenanzeige</legend>
 
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-6 control-label" for="Dein aktueller Ort">Dein aktueller Ort</label>
+                            <div class="col-m-6">
+                                <input id="Dein aktueller Ort" name="Dein aktueller Ort"
+                                       placeholder="Du befindest Dich hier" class="io-text-field" type="text">
+
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-6 control-label" for="Koordinaten Deines Orts">Koordinaten von Deinem
+                                Ort</label>
+                            <div class="col-m-6">
+                                <input id="Koordinaten Deines Orts" name="Koordinaten Deines Orts"
+                                       placeholder="Latitude / Longtitude" class="io-text-field" type="text">
+
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-6 control-label" for="Surfspot">Nächster Surfspot</label>
+                            <div class="col-m-6">
+                                <input id="Surfspot" name="Surfspot" placeholder="Surfspot"
+                                       class="io-text-field" type="text">
+
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-6 control-label" for="Koordinaten Deines Surfspots">Koordinaten Deines
+                                Surfspots</label>
+                            <div class="col-m-6">
+                                <input id="Koordinaten Deines Surfspots" name="Koordinaten Deines Surfspots"
+                                       placeholder="Latitude / Longtitude" class="io-text-field" type="text">
+
+                            </div>
+                        </section>
+                    </fieldset>
+                </form>
             </section>
 
             <section id="ratingsabgeben">
@@ -82,64 +110,31 @@
                     </div>
                 </form>
             </section>
+        </section>
 
-            <section id="destinationsuchen">
-
-                <form class="form-horizontal">
-                    <fieldset>
-
-                        <!-- Form Name -->
-                        <legend>Hangloose Datenanzeige</legend>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="Dein aktueller Ort">Dein aktueller Ort</label>
-                            <div class="col-md-4">
-                                <input id="Dein aktueller Ort" name="Dein aktueller Ort"
-                                       placeholder="Du befindest Dich hier" class="form-control input-md" type="text">
-
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="Koordinaten Deines Orts">Koordinaten von Deinem
-                                Ort</label>
-                            <div class="col-md-4">
-                                <input id="Koordinaten Deines Orts" name="Koordinaten Deines Orts"
-                                       placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
-
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="Surfspot">Nächster Surfspot</label>
-                            <div class="col-md-4">
-                                <input id="Surfspot" name="Surfspot" placeholder="Surfspot"
-                                       class="form-control input-md" type="text">
-
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="Koordinaten Deines Surfspots">Koordinaten Deines
-                                Surfspots</label>
-                            <div class="col-md-4">
-                                <input id="Koordinaten Deines Surfspots" name="Koordinaten Deines Surfspots"
-                                       placeholder="Latitude / Longtitude" class="form-control input-md" type="text">
-
-                            </div>
-                        </div>
-
-                    </fieldset>
-                </form>
-
-                <div id="chartContainer"></div>
-            </section>
-        </div>
+        <aside id="map_wrapper" class="col-6"></aside>
     </section>
+
+
+    <section class="row">
+        <section id="ratings" class="col-6">
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                    Mauris placerat eleifend leo.</p>
+
+            <div id="chartContainer"></div>
+        </section>
+    </section>
+
 </main>
 
 <footer id="page_footer">
