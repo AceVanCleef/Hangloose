@@ -7,8 +7,150 @@ $(document).ready(function () {
     });
 });
 
+var marker, map;
+
+/**
+ * Initialize a Google Maps into the section with Geolocation.
+ */
+function initMap() {
+    var pos;
+    pos = {lat: -34.397, lng: 150.644};
+    map = new google.maps.Map(document.getElementById('map_wrapper'), {
+        zoom: 8
+    });
+
+    marker = new google.maps.Marker({
+        position: pos
+    });
+
+    map.addListener('click', function (e) {
+        setLocationMarker(e.latLng);
+    });
+    //infoWindow = new google.maps.InfoWindow({map: map});
+
+
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            //infoWindow.setPosition(pos);
+            //infoWindow.setContent('Location found.');
+
+            setLocationMarker(pos);
+        }, function () {
+            //handleLocationError(true, infoWindow, map.getCenter());
+            setLocationMarker(pos);
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        //handleLocationError(false, infoWindow, map.getCenter());
+        setLocationMarker(pos);
+    }
+
+    var geocoder = new google.maps.Geocoder();
+
+    document.getElementById('search_button').addEventListener('click', function () {
+        geocodeAddress(geocoder, map);
+    });
+}
+
+function setLocationMarker(pos) {
+    marker.setPosition(pos);
+    map.setCenter(pos);
+    marker.setMap(map);
+}
+
+/**
+ * Show an error message due to Geolocation.
+ * @param browserHasGeolocation
+ * @param infoWindow
+ * @param pos
+ */
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+    var address = document.getElementById('search_input').value;
+    geocoder.geocode({'address': address}, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            resultsMap.setCenter(results[0].geometry.location);
+            setLocationMarker(results[0].geometry.location);
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
 
 $(function () {
+    var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+    $("#search_input").autocomplete({
+        minLength: 3,
+        source: function (request, response) {
+            geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({
+                'address': request.term
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    /*var searchLoc = results[0].geometry.location;
+                    var lat = results[0].geometry.location.lat();
+                    var lng = results[0].geometry.location.lng();
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    var bounds = results[0].geometry.bounds;*/
+
+                    response($.map(results, function (loc) {
+                        return {
+                            label: loc.formatted_address,
+                            value: loc.formatted_address,
+                            bounds: loc.geometry.bounds
+                        }
+                    }));
+                }
+            });
+        },
+        select: function (event, ui) {
+          /*  var pos = ui.item.position;
+            var lct = ui.item.locType;*/
+            var bounds = ui.item.bounds;
+
+            if (bounds) {
+                alert(bounds);
+                map.fitBounds(bounds);
+            }
+        }
+    });
+
     Highcharts.chart('chartContainer', {
         chart: {
             type: 'area'
