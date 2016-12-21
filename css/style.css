@@ -128,6 +128,9 @@
         /* background-image:url(/img/back1.jpg);*/
         width: 100%;
         height: 100%;
+        -webkit-background-size:;
+        background-size: cover;
+        background-position: center top;
         font-size: small;
         font-family: Verdana, Arial, Helvetica, sans-serif;
     }
