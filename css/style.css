@@ -59,7 +59,7 @@
         [class*="col-"] {
             float: left;
             padding: 15px;
-            border: 1px solid black;    /*  Nur um Divs besser zu sehen, später löschen */
+            /*border: 1px solid black;    /*  Nur um Divs besser zu sehen, später löschen */
         }
 
         /* hide mechanic */
@@ -121,70 +121,59 @@
 
 /* look and feel section */
 
-    /* For development. To make it visible*/
-
     body {
-        background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Large_breaking_wave.jpg");
-        /* background-image:url(/img/back1.jpg);*/
+        background: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Large_breaking_wave.jpg") center top;
         width: 100%;
         height: 100%;
-        -webkit-background-size:;
         background-size: cover;
-        background-position: center top;
         font-size: small;
         font-family: Verdana, Arial, Helvetica, sans-serif;
     }
 
-
-
-    div {
-        //background: #333333; //otherwise the map wont be shown
+    #ratings, #io_wrapper {
+        background: #ffffcc;
+        padding: 2%;
     }
 
     .io-text-field {
         width: 100%;
     }
-/* END of look and feel section */
 
-div {
-    //background: #00BFFF; //otherwise the map wont be shown
+    /* nav section */
 
-    }
+        nav {
+            width:100%;
+            height:50px;
+            padding: 4px 8px;
+            bottom:0px;
+        }
 
-/* nav section */
+        nav a {
+            font-family: Helvetica, Verdana, Arial, Verdana, sans-serif;
+            text-align: center;
+            text-decoration: none;
+            text-space: 20px;
+            color: #000000;
+            font-weight: bold;
+            border-radius: 64px 64px 64px 64px;
+            -moz-border-radius: 64px 64px 64px 64px;
+            -webkit-border-radius: 64px 64px 64px 64px;
 
-    nav {
-        width:100%;
-        height:50px;
-        padding: 4px 8px;
-        bottom:0px;
-    }
-
-    nav a {
-        font-family: Helvetica, Verdana, Arial, Verdana, sans-serif;
-        text-align: center;
-        text-decoration: none;
-        text-space: 20px;
-        color: #000000;
-        font-weight: bold;
-        border-radius: 64px 64px 64px 64px;
-        -moz-border-radius: 64px 64px 64px 64px;
-        -webkit-border-radius: 64px 64px 64px 64px;
-
-        float: left;
-        width: 150px;
-        display: inline;
-        border: 1px solid;
-        margin: 10px;
-    }
+            float: left;
+            width: 150px;
+            display: inline;
+            border: 1px solid;
+            margin: 10px;
+        }
 
         nav a:hover, nav a:active {
-        text-decoration: none;
-        color: white;
-        background-color: red;
+            text-decoration: none;
+            color: white;
+            background-color: red;
+        }
+    /* END of nav section */
 
-}
+/* END of look and feel section */
 
 
 
-/* END of nav section */
