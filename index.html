@@ -6,11 +6,17 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- File not found. Causes loading time overhead:
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
+</script>
+<script type="text/javascript" src="js/script.js"></script>
 
 <body>
 
@@ -53,7 +59,8 @@
 
 
                         <form class="validate-form" method="post" action="neueSeite.html">
-                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span id="no1"></span> plus <span
+                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span
+                                    id="no1"></span> plus <span
                                     id="no2"></span>?</span>
                             <input name="answer" id="Antwort" pattern="7"
                                    title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
@@ -73,7 +80,6 @@
                     </div> <!-- ToDo: div entfernen -->
                 </form>
             </section>
-
 
 
             <section id="destinationsuchen">
@@ -148,18 +154,18 @@
 
     <section class="row">
         <section id="ratings" class="col-6">
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                    Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                    Mauris placerat eleifend leo.</p>
+            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                Mauris placerat eleifend leo.</p>
+            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                Mauris placerat eleifend leo.</p>
+            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                Mauris placerat eleifend leo.</p>
 
             <div id="chartContainer"></div>
         </section>
@@ -172,16 +178,5 @@
         &copy;2016 by Team Hangloose.
     </p>
 </footer>
-
-<!-- ToDo: Javascripts gehören ans Ende des Bodys, damit lange Ladezeiten (wie jetzt) vermieden werden -->
-<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
-<script type="text/javascript" src="js/highcharts.js"></script>
-<!--<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script> -->
-<script type="text/javascript" src="js/captcha.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
-</script>
 </body>
 </html>

@@ -27,43 +27,7 @@ $(document).ready(function () {
         $(document.body).find('#ratingsabgeben').show();
         $(document.body).find('#destinationsuchen').hide();
     });
-
-    $("#search_input").autocomplete({
-        minLength: 3,
-        source: function (request, response) {
-            geocoder = new google.maps.Geocoder();
-
-            geocoder.geocode({
-                'address': request.term
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    /*var searchLoc = results[0].geometry.location;
-                     var lat = results[0].geometry.location.lat();
-                     var lng = results[0].geometry.location.lng();
-                     var latlng = new google.maps.LatLng(lat, lng);
-                     var bounds = results[0].geometry.bounds;*/
-
-                    response($.map(results, function (loc) {
-                        return {
-                            label: loc.formatted_address,
-                            value: loc.formatted_address,
-                            pos: loc.geometry.location
-                        }
-                    }));
-                }
-            });
-        },
-        select: function (event, ui) {
-            /*  var pos = ui.item.position;
-             var lct = ui.item.locType;*/
-            var pos = ui.item.pos;
-
-            if (pos) {
-                setLocationMarker(pos);
-            }
-        }
-    });
-   placenumber();
+    placenumber();
 
 });
 
@@ -129,9 +93,9 @@ function setLocationMarker(pos) {
     marker.setMap(map);
 }
 
-function showTideData() {
+/*function showTideData() {
 
-}
+ }*/
 
 /**
  * Show an error message due to Geolocation.
@@ -173,7 +137,83 @@ function getTideData(pos, errorFunction, successFunction) {
     });
 }
 
+//Support fuer Safari und andere iOs Browsers
+function hasHtml5Validation() {
+    return typeof document.createElement('input').checkValidity === 'function';
+}
+
+if (hasHtml5Validation()) {
+    $('.validate-form').submit(function (e) {
+        if (!this.checkValidity()) {
+            e.preventDefault();
+            $(this).addClass('invalid');
+            $('#status').html('invalid');
+        } else {
+            $(this).removeClass('invalid');
+            $('#status').html('submitted');
+        }
+    });
+}
+//math to text
+function makenumber(numb) {
+    if (numb == 1)return "Eins";
+    if (numb == 2)return "Zwei";
+    if (numb == 3)return "Drei";
+    if (numb == 4)return "Vier";
+    if (numb == 5)return "Fünf";
+    if (numb == 6)return "Sechs";
+    if (numb == 7)return "Sieben";
+    if (numb == 8)return "Acht";
+    if (numb == 9)return "Neun";
+    if (numb == 10)return "Zehn";
+}//end makenumber function
+function placenumber() {
+    var x = Math.floor((Math.random() * 10) + 1);
+    var y = Math.floor((Math.random() * 10) + 1);
+    var no1 = makenumber(x);
+    var no2 = makenumber(y);
+    var ans = x + y;
+    document.getElementById('Antwort').pattern = ans;
+    document.getElementById("no1").innerHTML = no1;
+    document.getElementById("no2").innerHTML = no2;
+}//end placenumber function
+
 $(function () {
+    $("#search_input").autocomplete({
+        minLength: 3,
+        source: function (request, response) {
+            geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({
+                'address': request.term
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    /*var searchLoc = results[0].geometry.location;
+                     var lat = results[0].geometry.location.lat();
+                     var lng = results[0].geometry.location.lng();
+                     var latlng = new google.maps.LatLng(lat, lng);
+                     var bounds = results[0].geometry.bounds;*/
+
+                    response($.map(results, function (loc) {
+                        return {
+                            label: loc.formatted_address,
+                            value: loc.formatted_address,
+                            pos: loc.geometry.location
+                        }
+                    }));
+                }
+            });
+        },
+        select: function (event, ui) {
+            /*  var pos = ui.item.position;
+             var lct = ui.item.locType;*/
+            var pos = ui.item.pos;
+
+            if (pos) {
+                setLocationMarker(pos);
+            }
+        }
+    });
 
     Highcharts.chart('chartContainer', {
         chart: {
