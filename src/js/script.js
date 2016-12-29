@@ -6,25 +6,25 @@ $(document).ready(function () {
 
     });
 
-    $(document.body).find('#ratings').hide();
-    $(document.body).find('#ratingsabgeben').hide();
+    $(document.body).find('#ratings_section').hide();
+    $(document.body).find('#rate_section').hide();
 
 
     $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
-        $(document.body).find('#ratings').hide();
-        $(document.body).find('#ratingsabgeben').hide();
+        $(document.body).find('#ratings_section').hide();
+        $(document.body).find('#rate_section').hide();
         $(document.body).find('#destinationsuchen').show();
     });
 
     $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
-        $(document.body).find('#ratings').show();
-        $(document.body).find('#ratingsabgeben').hide();
+        $(document.body).find('#ratings_section').show();
+        $(document.body).find('#rate_section').hide();
         $(document.body).find('#destinationsuchen').hide();
     });
 
     $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
-        $(document.body).find('#ratings').hide();
-        $(document.body).find('#ratingsabgeben').show();
+        $(document.body).find('#ratings_section').hide();
+        $(document.body).find('#rate_section').show();
         $(document.body).find('#destinationsuchen').hide();
     });
     placenumber();
