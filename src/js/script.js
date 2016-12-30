@@ -236,13 +236,15 @@ function setLocation(pos) {
  * @param tideData response object of WorldTides API
  */
 function showTideData(tideData) {
-    myPos = { lat: tideData.requestLat, lng: tideData.requestLon };
-    surfPos = { lat: tideData.responseLat, lng: tideData.responseLon };
-    $('#coordinatesLocationLat').val(parseFloat(myPos.lat).toFixed(3));
-    $('#coordinatesLocationLng').val(parseFloat(myPos.lng).toFixed(3));
-    $('#coordinatesSurfspotLat').val(parseFloat(surfPos.lat).toFixed(3));
-    $('#coordinatesSurfspotLng').val(parseFloat(surfPos.lng).toFixed(3));
-    //$('#acatualLocation').val(geocodeLatLng(geocoder, myPos));
+    myPos = { lat: parseFloat(tideData.requestLat), lng: parseFloat(tideData.requestLon) };
+    surfPos = { lat: parseFloat(tideData.responseLat), lng: parseFloat(tideData.responseLon) };
+    $('#coordinatesLocationLat').val(myPos.lat.toFixed(3));
+    $('#coordinatesLocationLng').val(myPos.lng.toFixed(3));
+    $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
+    $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(3));
+    //alert(geocodeLatLng(geocoder, myPos));
+    geocodeLatLng(geocoder, myPos, $('#acatualLocation'));
+    geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
 }
 
@@ -271,14 +273,12 @@ function geocodeAddress(geocoder, resultsMap) {
     });
 }
 
-function geocodeLatLng(geocoder, pos) {
+function geocodeLatLng(geocoder, pos, resultElement) {
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({'location': pos}, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             if (results[1]) {
-                return results[1].formatted_address;
-            } else {
-                return 'No results found';
+                resultElement.val(results[1].formatted_address);
             }
         } else {
             return 'Geocoder failed due to: ' + status;
