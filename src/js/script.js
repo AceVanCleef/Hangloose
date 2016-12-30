@@ -36,6 +36,9 @@ $(document).ready(function () {
             alert("Error: Yout input isn't a correct coordinate for longitude!");
         }
     });
+
+    //Tab "Bewertungen" bei Seitenaufruf sichtbar
+    $('#readRatings').show();
 });
 
 
@@ -342,4 +345,30 @@ function makenumber(numb) {
     if (numb == 8)return "Acht";
     if (numb == 9)return "Neun";
     if (numb == 10)return "Zehn";
+}
+
+/* Ermöglicht Wechsel zwischen den Tabs "Bewertungen" und "Gib deine Bewertung ab".
+ *
+ * @param evt   OnClick Event der Tabs.
+ * @param ratingTab id der Zieldivs im DOM - Tree.
+ */
+function openRating(evt, ratingTab) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the link that opened the tab
+    document.getElementById(ratingTab).style.display = "block";
+    evt.currentTarget.className += " active";
 }

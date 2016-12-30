@@ -89,6 +89,45 @@
 
 /* TODO: if background images, then use img files with diff. dimensions and media queries OR <picture> */
 
+    /* tabs */
+    ul.tab {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Float the list items side by side */
+    ul.tab li {float: left;}
+
+    /* Style the links inside the list items */
+    ul.tab li a {
+        display: inline-block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+    /* Change background color of links on hover */
+    ul.tab li a:hover {background-color: #ddd;}
+
+    /* Create an active/current tablink class */
+    ul.tab li a:focus, .active {background-color: #ccc;}
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+    /* END of tabs */
+
     /* other layouting */
         html, body {
             height: 100%;
@@ -110,6 +149,14 @@
             height: 400px;
             padding: 0;
         }
+
+        img.responsive-img {
+            max-width: 100%;
+            height: auto;
+        }
+        main {
+            padding: 2%;
+        }
     /* END of other layouting */
 
 
@@ -121,17 +168,44 @@
 
 /* look and feel section */
 
+    /* color classes (inspired by: http://www.w3schools.com/w3css/tryw3css_templates_social.htm) */
+    .grey-gradient-bg {
+        background: #4d636f; /* For browsers that do not support gradients */
+        background: -webkit-linear-gradient(#4d636f, #3a4b53); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#4d636f, #3a4b53); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#4d636f, #3a4b53); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#4d636f, #3a4b53); /* Standard syntax */
+    }
+    .dark-grey-bg {
+        background: #3a4b53;
+    }
+    .mid-grey-bg {
+        background: #4d636f;
+    }
+    .light-grey-bg {
+        background: #f5f7f8;
+    }
+    .white-bg {
+        background: #ffffff;
+    }
+    .white-font {
+        color: #ffffff;
+    }
+    /* END of color classes*/
+
+    .drop-shadow {
+        box-shadow: 10px 10px 5px grey;
+    }
+
     body {
-        background: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Large_breaking_wave.jpg") center top;
         width: 100%;
         height: 100%;
-        background-size: cover;
         font-size: small;
         font-family: Verdana, Arial, Helvetica, sans-serif;
     }
 
+
     #ratings, #io_wrapper {
-        background: #ffffcc;
         padding: 2%;
     }
 
@@ -145,7 +219,7 @@
             width:100%;
             height:50px;
             padding: 4px 8px;
-            bottom:0px;
+            bottom: 0px;
         }
 
         nav a {
