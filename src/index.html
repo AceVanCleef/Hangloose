@@ -18,10 +18,10 @@
 </script>
 <script type="text/javascript" src="js/script.js"></script>
 
-<body>
+<body class="light-grey-bg">
 
 
-<header id="page_header">
+<header id="page_header" class="white-font grey-gradient-bg">
     <h1>HANGLOOSE </h1>
     <h3>You cant stop the waves but you can learn to surf</h3>
 </header>
@@ -30,55 +30,26 @@
 <main class="grid-container">
     <section class="row">
 
-        <section id="io_wrapper" class="col-6">
+        <section id="io_wrapper" class="col-6 white-bg drop-shadow">
 
+            <!-- ToDo: refractor script.js: -->
+            <!--
             <nav>
                 <a id="ratingsLink" href="#">Ratings</a>
                 <a id="ratingsabgebenLink" href="#">Rating abgeben</a>
                 <a id="destinationsuchenLink" href="#">Destination suchen</a>
             </nav>
-
+            -->
 
             <h2>Suche nach Destination</h2>
 
-            <!-- ToDo: define form action -->
+
             <form id="search_form">
                 <input type="text" id="search_input"/>
                 <button id="search_button">GO!</button>
                 <button id="location_button">My Location!</button>
             </form>
 
-
-            <section id="rate_section">
-                <form action="textarea.html" method="post">
-
-                    <label for="text">Gib Dein Rating des Surfspots ab</label>
-                    <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                    <!--<input type="submit" value="Senden"/> -->
-
-
-                    <form class="validate-form" method="post" action="neueSeite.html">
-                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span
-                                    id="no1"></span> plus <span
-                                    id="no2"></span>?</span>
-                        <input name="answer" id="Antwort" pattern="7"
-                               title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
-                               placeholder="Gib eine Zahl ein" required>
-                        <input type="submit" value="senden">
-
-                        <!-- ToDo: Macht der Bildupload sinn in diesem Codeabschnitt? Bitte überarbeiten. (SW)-->
-                        <label for="text">Lade Bilder Dieses Surfspots hoch</label>
-                        <form action="upload.php" method="post" enctype="multipart/form-data">
-                            <input type="file" name="datei"><br>
-                            <input type="submit" value="Ausgewählte Datei Hochladen">
-
-                        </form>
-                        <span id="status" style="display:none">Unsubmitted</span>
-
-
-                    </form>
-                </form>
-            </section>
 
 
             <section id="destinationsuchen">
@@ -134,37 +105,118 @@
                         </section>
                     </fieldset>
                 </form>
-                <div id="chartContainer"></div>
+
             </section>
         </section>
 
-        <aside id="map_wrapper" class="col-6"></aside>
+        <aside id="map_wrapper" class="col-6 drop-shadow"></aside>
+
+
+    </section>
+    <section class="row">
+        <section id="wave_chart" class="col-m-12 white-bg drop-shadow">
+            <div id="chartContainer"></div>
+        </section>
     </section>
 
-
     <section class="row">
-        <section id="ratings_section" class="col-6">
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                Mauris placerat eleifend leo.</p>
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                Mauris placerat eleifend leo.</p>
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-                Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                Mauris placerat eleifend leo.</p>
+        <section class="col-12 white-bg drop-shadow">   <!-- id="ratings_section"  entfernt -->
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openRating(event, 'readRatings')">Bewertungen</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openRating(event, 'createRating')">Gib deine Bewertung ab</a></li>
+            </ul>
+
+            <div id="readRatings" class="tabcontent">
+                <h3>Bewertungen anderer Surfer</h3>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img" />
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img" />
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img" />
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+            </div>
+
+            <div id="createRating" class="tabcontent">
+                <h3>Bewerte diesen Surfspot</h3>
+                <section id="rate_section">
+                    <form action="textarea.html" method="post">
+
+                        <label for="text">Gib Dein Rating des Surfspots ab</label>
+                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
+                        <!--<input type="submit" value="Senden"/> -->
+
+
+                        <form class="validate-form" method="post" action="neueSeite.html">
+                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span
+                                    id="no1"></span> plus <span
+                                    id="no2"></span>?</span>
+                            <input name="answer" id="Antwort" pattern="7"
+                                   title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
+                                   placeholder="Gib eine Zahl ein" required>
+                            <input type="submit" value="senden">
+
+                            <!-- ToDo: Macht der Bildupload sinn in diesem Codeabschnitt? Bitte überarbeiten. (SW)-->
+                            <label for="text">Lade Bilder Dieses Surfspots hoch</label>
+                            <form action="upload.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="datei"><br>
+                                <input type="submit" value="Ausgewählte Datei Hochladen">
+
+                            </form>
+                            <span id="status" style="display:none">Unsubmitted</span>
+
+
+                        </form>
+                    </form>
+                </section>
+            </div>
+
+
         </section>
     </section>
 
 </main>
 
-<footer id="page_footer">
+<footer id="page_footer" class="white-font mid-grey-bg">
     <p>
         &copy;2016 by Team Hangloose.
     </p>
 </footer>
+
 </body>
 </html>
