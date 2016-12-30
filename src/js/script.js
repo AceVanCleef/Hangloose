@@ -27,11 +27,14 @@ $(document).ready(function () {
         $(document.body).find('#rate_section').show();
         $(document.body).find('#destinationsuchen').hide();
     });
+    $(document.body).find('main').on('click', '#location_button', function() {
+        alert("my location");
+    });
     placenumber();
 
 });
 
-var marker, map;
+var marker, surfMarker, map;
 
 /**
  * Initialize a Google Maps into the section with Geolocation.
@@ -44,11 +47,20 @@ function initMap() {
     });
 
     marker = new google.maps.Marker({
+        map: map,
         position: pos
+    });
+    var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+    surfMarker= new google.maps.Marker({
+        map: map,
+        icon: image
     });
 
     map.addListener('click', function (e) {
-        setLocationMarker(e.latLng);
+        setLocationMarker(pos = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng()
+        });
     });
     //infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -83,19 +95,23 @@ function initMap() {
 }
 
 function setLocationMarker(pos) {
-    getTideData(pos, function () {
-        alert("error");
+    getTideData(pos, function (msg) {
+        alert("error: " + JSON.stringify(msg));
     }, function (tideData) {
-        alert(tideData.requestLat);
+        surfPos = {
+            lat: tideData.responseLat,
+            lng: tideData.responseLon
+        };
+        surfMarker.setPosition(surfPos);
+        marker.setPosition(pos);
+        map.setCenter(surfPos);
+        showTideData(tideData);
     });
-    marker.setPosition(pos);
-    map.setCenter(pos);
-    marker.setMap(map);
 }
 
-/*function showTideData() {
-
- }*/
+function showTideData() {
+    alert("test");
+}
 
 /**
  * Show an error message due to Geolocation.
