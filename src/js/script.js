@@ -138,7 +138,7 @@ function initAutocomplete() {
  * Initialize the tab links for navigation.
  */
 function initNavigation() {
-    $(document.body).find('#ratings_section').hide();
+    /*$(document.body).find('#ratings_section').hide();
     $(document.body).find('#rate_section').hide();
 
 
@@ -159,6 +159,9 @@ function initNavigation() {
         $(document.body).find('#rate_section').show();
         $(document.body).find('#destinationsuchen').hide();
     });
+
+    */
+
     $(document.body).find('main').on('click', '#location_button', function () {
         alert("my location");
     });
