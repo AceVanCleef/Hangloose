@@ -11,21 +11,32 @@ $(document).ready(function () {
         var searchQuery = $('#search_input').val();
     });
 
-    $('#coordinatesLocationLng').change(function() {
-        setLocation(pos = {
-            lat: parseFloat($('#coordinatesLocationLat').val()),
-            lng: parseFloat($('#coordinatesLocationLng').val())
-        });
+    $('#coordinatesLocationLng').change(function () {
+        var lng = $(this).val();
+        if (!isNaN(lng) && lng >= -180 && lat <= 180) {
+            setLocation(pos = {
+                lat: parseFloat($('#coordinatesLocationLat').val()),
+                lng: parseFloat(lng)
+            });
+        }
+        else {
+            alert("Error: Yout input isn't a correct coordinate for latitude!");
+        }
     });
 
-    $('#coordinatesLocationLat').change(function() {
-        setLocation(pos = {
-            lat: parseFloat($('#coordinatesLocationLat').val()),
-            lng: parseFloat($('#coordinatesLocationLng').val())
-        });
+    $('#coordinatesLocationLat').change(function () {
+        var lat = $(this).val();
+        if (!isNaN(lat) && lat >= -85.05115 && lat <= 85) {
+            setLocation(pos = {
+                lat: parseFloat(lat),
+                lng: parseFloat($('#coordinatesLocationLng').val())
+            });
+        }
+        else {
+            alert("Error: Yout input isn't a correct coordinate for longitude!");
+        }
     });
 });
-
 
 
 /**
@@ -281,7 +292,7 @@ function getTideData(pos, errorFunction, successFunction) {
 function setChartData(chartData) {
     var data = [];
 
-    if(chart.series.length != 0)
+    if (chart.series.length != 0)
         chart.series[0].remove();
     chartData.forEach(function (e) {
         var point = [Date.parse(e.date), e.height];
