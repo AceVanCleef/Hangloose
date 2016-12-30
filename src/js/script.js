@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var marker, surfMarker, map, chart;
+    var marker, surfMarker, map, chart, geocoder;
 
     initNavigation();
     initChart();
@@ -90,7 +90,7 @@ function initMap() {
         setLocation(pos);
     }
 
-    var geocoder = new google.maps.Geocoder();
+    geocoder = new google.maps.Geocoder();
 
     document.getElementById('search_button').addEventListener('click', function () {
         geocodeAddress(geocoder, map);
@@ -177,7 +177,8 @@ function initChart() {
                 "type": "datetime",
                 "labels": {
                     "format": "{value:%b %e}"
-                }
+                },
+                tickInterval: 24 * 3600 * 1000
             }
         ],
         yAxis: {
@@ -232,10 +233,13 @@ function setLocation(pos) {
  * @param tideData response object of WorldTides API
  */
 function showTideData(tideData) {
-    $('#coordinatesLocationLat').val(parseFloat(tideData.requestLat).toFixed(3));
-    $('#coordinatesLocationLng').val(parseFloat(tideData.requestLon).toFixed(3));
-    $('#coordinatesSurfspotLat').val(parseFloat(tideData.responseLat).toFixed(3));
-    $('#coordinatesSurfspotLng').val(parseFloat(tideData.responseLon).toFixed(3));
+    myPos = { lat: tideData.requestLat, lng: tideData.requestLon };
+    surfPos = { lat: tideData.responseLat, lng: tideData.responseLon };
+    $('#coordinatesLocationLat').val(parseFloat(myPos.lat).toFixed(3));
+    $('#coordinatesLocationLng').val(parseFloat(myPos.lng).toFixed(3));
+    $('#coordinatesSurfspotLat').val(parseFloat(surfPos.lat).toFixed(3));
+    $('#coordinatesSurfspotLng').val(parseFloat(surfPos.lng).toFixed(3));
+    //$('#acatualLocation').val(geocodeLatLng(geocoder, myPos));
     setChartData(tideData.heights);
 }
 
@@ -260,6 +264,21 @@ function geocodeAddress(geocoder, resultsMap) {
             setLocation(results[0].geometry.location);
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+function geocodeLatLng(geocoder, pos) {
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'location': pos}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                return results[1].formatted_address;
+            } else {
+                return 'No results found';
+            }
+        } else {
+            return 'Geocoder failed due to: ' + status;
         }
     });
 }
