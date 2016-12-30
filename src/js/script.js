@@ -109,8 +109,11 @@ function setLocationMarker(pos) {
     });
 }
 
-function showTideData() {
-    alert("test");
+function showTideData(tideData) {
+    $('#coordinatesLocationLat').val(parseFloat(tideData.requestLat).toFixed(3));
+    $('#coordinatesLocationLng').val(parseFloat(tideData.requestLon).toFixed(3));
+    $('#coordinatesSurfspotLat').val(parseFloat(tideData.responseLat).toFixed(3));
+    $('#coordinatesSurfspotLng').val(parseFloat(tideData.responseLon).toFixed(3));
 }
 
 /**

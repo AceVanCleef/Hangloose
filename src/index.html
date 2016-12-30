@@ -52,33 +52,32 @@
             <section id="rate_section">
                 <form action="textarea.html" method="post">
 
-                        <label for="text">Gib Dein Rating des Surfspots ab</label>
-                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                        <!--<input type="submit" value="Senden"/> -->
+                    <label for="text">Gib Dein Rating des Surfspots ab</label>
+                    <textarea id="text" name="text" cols="45" rows="12"></textarea>
+                    <!--<input type="submit" value="Senden"/> -->
 
 
-                        <form class="validate-form" method="post" action="neueSeite.html">
+                    <form class="validate-form" method="post" action="neueSeite.html">
                             <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span
                                     id="no1"></span> plus <span
                                     id="no2"></span>?</span>
-                            <input name="answer" id="Antwort" pattern="7"
-                                   title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
-                                   placeholder="Gib eine Zahl ein" required>
-                            <input type="submit" value="senden">
+                        <input name="answer" id="Antwort" pattern="7"
+                               title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
+                               placeholder="Gib eine Zahl ein" required>
+                        <input type="submit" value="senden">
 
-                            <!-- ToDo: Macht der Bildupload sinn in diesem Codeabschnitt? Bitte überarbeiten. (SW)-->
-                            <label for="text">Lade Bilder Dieses Surfspots hoch</label>
-                            <form action="upload.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="datei"><br>
-                                <input type="submit" value="Ausgewählte Datei Hochladen">
+                        <!-- ToDo: Macht der Bildupload sinn in diesem Codeabschnitt? Bitte überarbeiten. (SW)-->
+                        <label for="text">Lade Bilder Dieses Surfspots hoch</label>
+                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                            <input type="file" name="datei"><br>
+                            <input type="submit" value="Ausgewählte Datei Hochladen">
 
-                            </form>
-                            <span id="status" style="display:none">Unsubmitted</span>
+                        </form>
+                        <span id="status" style="display:none">Unsubmitted</span>
 
 
-
-                </form>
                     </form>
+                </form>
             </section>
 
 
@@ -91,47 +90,46 @@
 
                         <!-- Text input-->
                         <section class="row">
-                            <label class="col-m-6 control-label" for="dein_aktueller_ort">Dein aktueller Ort</label>
+                            <label class="col-m-5 control-label" for="acatualLocation">Your Location</label>
                             <div class="col-m-6">
-                                <input id="dein_aktueller_ort" name="Dein aktueller Ort"
-                                       placeholder="Du befindest Dich hier" class="io-text-field" type="text">
-
-
+                                <input id="acatualLocation"
+                                       placeholder="Location" class="io-text-field" type="text">
                             </div>
                         </section>
 
                         <!-- Text input-->
                         <section class="row">
-                            <label class="col-m-6 control-label" for="koordinaten_deines_orts">Koordinaten von Deinem
-                                Ort</label>
-                            <div class="col-m-6">
-                                <input id="koordinaten_deines_orts" name="Koordinaten Deines Orts"
-                                       placeholder="Latitude / Longtitude" class="io-text-field" type="text">
-
-
+                            <label class="col-m-5 control-label" for="coordinatesLocationLat">Coordinates</label>
+                            <div class="col-m-3">
+                                <input id="coordinatesLocationLat"
+                                       placeholder="Latitude" class="io-text-field" type="text">
+                            </div>
+                            <div class="col-m-3">
+                                <input id="coordinatesLocationLng"
+                                       placeholder="Longtitude" class="io-text-field" type="text">
                             </div>
                         </section>
 
                         <!-- Text input-->
                         <section class="row">
-                            <label class="col-m-6 control-label" for="surfspot">Nächster Surfspot</label>
+                            <label class="col-m-5 control-label" for="surfspotLocation">Surfspot Location</label>
                             <div class="col-m-6">
-                                <input id="surfspot" name="Surfspot" placeholder="Surfspot"
+                                <input id="surfspotLocation" placeholder="Surfspot Location" disabled
                                        class="io-text-field" type="text">
-
-
                             </div>
                         </section>
 
                         <!-- Text input-->
                         <section class="row">
-                            <label class="col-m-6 control-label" for="koordinaten_deines_surfspots">Koordinaten Deines
+                            <label class="col-m-5 control-label" for="coordinatesSurfspotLat">Koordinaten Deines
                                 Surfspots</label>
-                            <div class="col-m-6">
-                                <input id="koordinaten_deines_surfspots" name="Koordinaten Deines Surfspots"
-                                       placeholder="Latitude / Longtitude" class="io-text-field" type="text">
-
-
+                            <div class="col-m-3">
+                                <input id="coordinatesSurfspotLat" disabled
+                                       placeholder="Latitude" class="io-text-field" type="text">
+                            </div>
+                            <div class="col-m-3">
+                                <input id="coordinatesSurfspotLng" disabled
+                                       placeholder="Longitude" class="io-text-field" type="text">
                             </div>
                         </section>
                     </fieldset>
