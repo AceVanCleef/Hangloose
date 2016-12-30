@@ -137,8 +137,8 @@
 
         header, footer {
             border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
-            padding: 15px;
-            margin: -15px;
+            padding: 10px;
+            margin: -10px;
         }
 
         header > *, footer > * {
@@ -156,6 +156,9 @@
         }
         main {
             padding: 2%;
+        }
+        #io_wrapper form section.row{
+            margin: -10px 0px;
         }
     /* END of other layouting */
 
@@ -193,6 +196,28 @@
     }
     /* END of color classes*/
 
+    /* form elements */
+    .btn {
+        background: #3a4b53;
+        color: #ffffff;
+        padding: 5px;
+        min-width: 100px;
+    }
+    .btn:hover {
+        background: #4d636f;
+    }
+    .btn:active {
+        border: 3px solid black;
+        margin: -3px;
+    }
+    .text-input {
+        border: none;
+        border-bottom: 1px solid black;
+        background: #f5f7f8;
+        width: 100%;
+    }
+    /* END of form elements */
+
     .drop-shadow {
         box-shadow: 10px 10px 5px grey;
     }
@@ -208,6 +233,7 @@
     #ratings, #io_wrapper {
         padding: 2%;
     }
+
 
     .io-text-field {
         width: 100%;

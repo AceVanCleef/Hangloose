@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     $(document.body).find('#io_wrapper').on('click', '#search_button', function (event) {
         event.preventDefault();
-        var searchQuery = $('#search_input').val();
+        var searchQuery = $('#actualLocation').val();
     });
 
     $('#coordinatesLocationLng').change(function () {
@@ -104,7 +104,7 @@ function initMap() {
  * Initialize the autocomplete of the search input with Geolocation.
  */
 function initAutocomplete() {
-    $("#search_input").autocomplete({
+    $("#actualLocation").autocomplete({
         minLength: 3,
         source: function (request, response) {
             geocoder = new google.maps.Geocoder();
@@ -246,7 +246,7 @@ function showTideData(tideData) {
     $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
     $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(3));
     //alert(geocodeLatLng(geocoder, myPos));
-    geocodeLatLng(geocoder, myPos, $('#acatualLocation'));
+    geocodeLatLng(geocoder, myPos, $('#actualLocation'));
     geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
 }
@@ -265,7 +265,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 function geocodeAddress(geocoder, resultsMap) {
-    var address = document.getElementById('search_input').value;
+    var address = document.getElementById('actualLocation').value;
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             resultsMap.setCenter(results[0].geometry.location);

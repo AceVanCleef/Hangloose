@@ -23,7 +23,7 @@
 
 <header id="page_header" class="white-font grey-gradient-bg">
     <h1>HANGLOOSE </h1>
-    <h3>You cant stop the waves but you can learn to surf</h3>
+    <h4>You cant stop the waves but you can learn to surf</h4>
 </header>
 
 
@@ -31,32 +31,19 @@
     <section class="row">
 
         <section id="io_wrapper" class="col-6 white-bg drop-shadow">
-            
-
-            <h2>Suche nach Destination</h2>
-
-
-            <form id="search_form">
-                <input type="text" id="search_input"/>
-                <button id="search_button">GO!</button>
-                <button id="location_button">My Location!</button>
-            </form>
-
-
 
             <section id="destinationsuchen">
                 <form>
                     <fieldset>
 
-                        <!-- Form Name -->
-                        <legend>Hangloose Datenanzeige</legend>
+                        <legend>Wähle eine Surflocation</legend>
 
                         <!-- Text input-->
                         <section class="row">
-                            <label class="col-m-5 control-label" for="acatualLocation">Your Location</label>
+                            <label class="col-m-5 control-label" for="actualLocation">Your Location</label>
                             <div class="col-m-6">
-                                <input id="acatualLocation"
-                                       placeholder="Location" class="io-text-field" type="text">
+                                <input id="actualLocation"
+                                       placeholder="Location" class="text-input" type="text">
                             </div>
                         </section>
 
@@ -65,11 +52,21 @@
                             <label class="col-m-5 control-label" for="coordinatesLocationLat">Coordinates</label>
                             <div class="col-m-3">
                                 <input id="coordinatesLocationLat"
-                                       placeholder="Latitude" class="io-text-field" type="text">
+                                       placeholder="Latitude" class="text-input" type="text">
                             </div>
                             <div class="col-m-3">
                                 <input id="coordinatesLocationLng"
-                                       placeholder="Longtitude" class="io-text-field" type="text">
+                                       placeholder="Longtitude" class="text-input" type="text">
+                            </div>
+                        </section>
+
+                        <section class="row">
+                            <div class="col-m-5"></div>
+                            <div class="col-m-3">
+                                <button id="search_button" class="btn">GO!</button>
+                            </div>
+                            <div class="col-m-3">
+                                <button id="location_button" class="btn">My Location!</button>
                             </div>
                         </section>
 
@@ -77,8 +74,9 @@
                         <section class="row">
                             <label class="col-m-5 control-label" for="surfspotLocation">Surfspot Location</label>
                             <div class="col-m-6">
-                                <input id="surfspotLocation" placeholder="Surfspot Location" disabled
+                               <input id="surfspotLocation" placeholder="Surfspot Location" disabled
                                        class="io-text-field" type="text">
+                                <!--<dialog id="surfspotLocation"></dialog> -->
                             </div>
                         </section>
 
@@ -169,28 +167,31 @@
                 <section id="rate_section">
                     <form action="textarea.html" method="post">
 
-                        <label for="text">Gib Dein Rating des Surfspots ab</label>
-                        <textarea id="text" name="text" cols="45" rows="12"></textarea>
-                        <!--<input type="submit" value="Senden"/> -->
-
+                        <textarea id="text" name="text" cols="45" rows="12" class="text-input"></textarea>
 
                         <form class="validate-form" method="post" action="neueSeite.html">
-                            <span style="color:#FFF">CAPTCHA : Wieviele Haifische ergeben: <span
-                                    id="no1"></span> plus <span
-                                    id="no2"></span>?</span>
+
+                            <label for="text">Lade ein Bild dieses Surfspots hoch</label>
+                            <form action="upload.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="datei" class="btn"><br>
+                                <input type="submit" value="Ausgewählte Datei hochladen" class="btn" />
+                            </form>
+                            <span id="status" style="display:none">Unsubmitted</span>
+
+                            <h4>CAPTCHA</h4>
+                            <p>Wieviele Haifische ergeben: </p>
+                            <p>
+                                <dialog id="no1"></dialog>
+                                plus
+                                <dialog id="no2"></dialog>
+                                ?
+                            </p>
                             <input name="answer" id="Antwort" pattern="7"
                                    title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
                                    placeholder="Gib eine Zahl ein" required>
-                            <input type="submit" value="senden">
+                            <input type="submit" value="senden" class="btn" />
 
-                            <!-- ToDo: Macht der Bildupload sinn in diesem Codeabschnitt? Bitte überarbeiten. (SW)-->
-                            <label for="text">Lade Bilder Dieses Surfspots hoch</label>
-                            <form action="upload.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="datei"><br>
-                                <input type="submit" value="Ausgewählte Datei Hochladen">
 
-                            </form>
-                            <span id="status" style="display:none">Unsubmitted</span>
 
 
                         </form>
