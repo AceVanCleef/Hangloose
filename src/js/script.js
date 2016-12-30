@@ -10,6 +10,20 @@ $(document).ready(function () {
         event.preventDefault();
         var searchQuery = $('#search_input').val();
     });
+
+    $('#coordinatesLocationLng').change(function() {
+        setLocation(pos = {
+            lat: parseFloat($('#coordinatesLocationLat').val()),
+            lng: parseFloat($('#coordinatesLocationLng').val())
+        });
+    });
+
+    $('#coordinatesLocationLat').change(function() {
+        setLocation(pos = {
+            lat: parseFloat($('#coordinatesLocationLat').val()),
+            lng: parseFloat($('#coordinatesLocationLng').val())
+        });
+    });
 });
 
 
@@ -35,7 +49,7 @@ function initMap() {
     });
 
     map.addListener('click', function (e) {
-        setLocationMarker(pos = {
+        setLocation(pos = {
             lat: e.latLng.lat(),
             lng: e.latLng.lng()
         });
@@ -54,15 +68,15 @@ function initMap() {
             //infoWindow.setPosition(pos);
             //infoWindow.setContent('Location found.');
 
-            setLocationMarker(pos);
+            setLocation(pos);
         }, function () {
             //handleLocationError(true, infoWindow, map.getCenter());
-            setLocationMarker(pos);
+            setLocation(pos);
         });
     } else {
         // Browser doesn't support Geolocation
         //handleLocationError(false, infoWindow, map.getCenter());
-        setLocationMarker(pos);
+        setLocation(pos);
     }
 
     var geocoder = new google.maps.Geocoder();
@@ -100,7 +114,7 @@ function initAutocomplete() {
             var pos = ui.item.pos;
 
             if (pos) {
-                setLocationMarker(pos);
+                setLocation(pos);
             }
         }
     });
@@ -184,10 +198,10 @@ function initCaptcha() {
 }
 
 /**
- * Set positions of the markers.
+ * Set the new location and update data.
  * @param pos Position object of the requested Location
  */
-function setLocationMarker(pos) {
+function setLocation(pos) {
     getTideData(pos, function (msg) {
         alert("error: " + JSON.stringify(msg));
     }, function (tideData) {
@@ -232,7 +246,7 @@ function geocodeAddress(geocoder, resultsMap) {
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             resultsMap.setCenter(results[0].geometry.location);
-            setLocationMarker(results[0].geometry.location);
+            setLocation(results[0].geometry.location);
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }
