@@ -94,6 +94,10 @@ function initMap() {
     });
 }
 
+/**
+ * Set positions of the markers.
+ * @param pos Position object of the requested Location
+ */
 function setLocationMarker(pos) {
     getTideData(pos, function (msg) {
         alert("error: " + JSON.stringify(msg));
@@ -109,6 +113,10 @@ function setLocationMarker(pos) {
     });
 }
 
+/**
+ * Presents surf data in the frontend.
+ * @param tideData response object of WorldTides API
+ */
 function showTideData(tideData) {
     $('#coordinatesLocationLat').val(parseFloat(tideData.requestLat).toFixed(3));
     $('#coordinatesLocationLng').val(parseFloat(tideData.requestLon).toFixed(3));
@@ -141,6 +149,12 @@ function geocodeAddress(geocoder, resultsMap) {
     });
 }
 
+/**
+ * Call data of WorldTides API.
+ * @param pos requested location pbject
+ * @param errorFunction function called by failure
+ * @param successFunction function called by success
+ */
 function getTideData(pos, errorFunction, successFunction) {
     $.ajax({
         url: 'https://www.worldtides.info/api?heights&key=9ce9447c-6193-48a6-acf4-16d43c8b0915&lat=' + pos.lat + '&lon=' + pos.lng,
@@ -156,8 +170,11 @@ function getTideData(pos, errorFunction, successFunction) {
     });
 }
 
-//Support fuer Safari und andere iOs Browsers
-function hasHtml5Validation() {
+/**
+ * Check if the browser supports html5
+ * @returns {boolean} true if supported
+ */
+/*function hasHtml5Validation() {
     return typeof document.createElement('input').checkValidity === 'function';
 }
 
@@ -172,8 +189,13 @@ if (hasHtml5Validation()) {
             $('#status').html('submitted');
         }
     });
-}
-//math to text
+}*/
+
+/**
+ * Generate text out of a numbers.
+ * @param numb number between 1-10
+ * @returns {string} text of number
+ */
 function makenumber(numb) {
     if (numb == 1)return "Eins";
     if (numb == 2)return "Zwei";
@@ -185,7 +207,11 @@ function makenumber(numb) {
     if (numb == 8)return "Acht";
     if (numb == 9)return "Neun";
     if (numb == 10)return "Zehn";
-}//end makenumber function
+}
+
+/**
+ * Places the captcha numbers.
+ */
 function placenumber() {
     var x = Math.floor((Math.random() * 10) + 1);
     var y = Math.floor((Math.random() * 10) + 1);
@@ -195,7 +221,7 @@ function placenumber() {
     document.getElementById('Antwort').pattern = ans;
     document.getElementById("no1").innerHTML = no1;
     document.getElementById("no2").innerHTML = no2;
-}//end placenumber function
+}
 
 $(function () {
     $("#search_input").autocomplete({
