@@ -1,41 +1,17 @@
 $(document).ready(function () {
+    var marker, surfMarker, map, chart;
+
+    initNavigation();
     initChart();
+    initAutocomplete();
+    initCaptcha();
+
     $(document.body).find('#io_wrapper').on('click', '#search_button', function (event) {
         event.preventDefault();
         var searchQuery = $('#search_input').val();
-        // TODO: search for locations and autocomplete them
-
     });
-
-    $(document.body).find('#ratings_section').hide();
-    $(document.body).find('#rate_section').hide();
-
-
-    $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
-        $(document.body).find('#ratings_section').hide();
-        $(document.body).find('#rate_section').hide();
-        $(document.body).find('#destinationsuchen').show();
-    });
-
-    $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
-        $(document.body).find('#ratings_section').show();
-        $(document.body).find('#rate_section').hide();
-        $(document.body).find('#destinationsuchen').hide();
-    });
-
-    $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
-        $(document.body).find('#ratings_section').hide();
-        $(document.body).find('#rate_section').show();
-        $(document.body).find('#destinationsuchen').hide();
-    });
-    $(document.body).find('main').on('click', '#location_button', function () {
-        alert("my location");
-    });
-    placenumber();
-
 });
 
-var marker, surfMarker, map, chart;
 
 
 /**
@@ -94,6 +70,117 @@ function initMap() {
     document.getElementById('search_button').addEventListener('click', function () {
         geocodeAddress(geocoder, map);
     });
+}
+
+/**
+ * Initialize the autocomplete of the search input with Geolocation.
+ */
+function initAutocomplete() {
+    $("#search_input").autocomplete({
+        minLength: 3,
+        source: function (request, response) {
+            geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({
+                'address': request.term
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+
+                    response($.map(results, function (loc) {
+                        return {
+                            label: loc.formatted_address,
+                            value: loc.formatted_address,
+                            pos: loc.geometry.location
+                        }
+                    }));
+                }
+            });
+        },
+        select: function (event, ui) {
+            var pos = ui.item.pos;
+
+            if (pos) {
+                setLocationMarker(pos);
+            }
+        }
+    });
+}
+
+/**
+ * Initialize the tab links for navigation.
+ */
+function initNavigation() {
+    $(document.body).find('#ratings_section').hide();
+    $(document.body).find('#rate_section').hide();
+
+
+    $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
+        $(document.body).find('#ratings_section').hide();
+        $(document.body).find('#rate_section').hide();
+        $(document.body).find('#destinationsuchen').show();
+    });
+
+    $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
+        $(document.body).find('#ratings_section').show();
+        $(document.body).find('#rate_section').hide();
+        $(document.body).find('#destinationsuchen').hide();
+    });
+
+    $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
+        $(document.body).find('#ratings_section').hide();
+        $(document.body).find('#rate_section').show();
+        $(document.body).find('#destinationsuchen').hide();
+    });
+    $(document.body).find('main').on('click', '#location_button', function () {
+        alert("my location");
+    });
+}
+
+/**
+ * Initialise tide chart with required options.
+ */
+function initChart() {
+    chart = new Highcharts.Chart('chartContainer', {
+        title: {
+            text: null
+        },
+        chart: {
+            type: 'area'
+        },
+        xAxis: [
+            {
+                "type": "datetime",
+                "labels": {
+                    "format": "{value:%b %e}"
+                }
+            }
+        ],
+        yAxis: {
+            title: {
+                text: 'Heights (in meters)'
+            }
+        },
+        tooltip: {
+            pointFormat: '<b>{point.y}m</b>'
+        },
+        legend: {
+            enabled: false
+        }
+    });
+}
+
+/**
+ * Places the captcha numbers.
+ */
+function initCaptcha() {
+    var x = Math.floor((Math.random() * 10) + 1);
+    var y = Math.floor((Math.random() * 10) + 1);
+    var no1 = makenumber(x);
+    var no2 = makenumber(y);
+    var ans = x + y;
+    document.getElementById('Antwort').pattern = ans;
+    document.getElementById("no1").innerHTML = no1;
+    document.getElementById("no2").innerHTML = no2;
 }
 
 /**
@@ -173,49 +260,19 @@ function getTideData(pos, errorFunction, successFunction) {
     });
 }
 
-function initChart() {
-    chart = new Highcharts.Chart('chartContainer', {
-        chart: {
-            type: 'area'
-        },
-        xAxis: [
-            {
-                "type": "datetime",
-                "labels": {
-                    "format": "{value:%b %e}"
-                }
-            }
-        ],/*{
-            title: {
-                text: 'Date/Time'
-            },
-            tickInterval: 3600 * 1000,
-            type: 'datetime',
-            labels: {
-                formatter: function () {
-                    return Highcharts.dateFormat('%b %e', this.value);
-                }
-            }
-        },*/
-        yAxis: {
-            title: {
-                text: 'Heights (in meters)'
-            }
-        },
-        tooltip: {
-            pointFormat: '<b>{point.y}</b>'
-        }
-    });
-}
-
+/**
+ * Parse data and display in chart.
+ * @param chartData Json 'heights' data of WorldTides API
+ */
 function setChartData(chartData) {
     var data = [];
 
-    chartData.forEach(function(e) {
+    if(chart.series.length != 0)
+        chart.series[0].remove();
+    chartData.forEach(function (e) {
         var point = [Date.parse(e.date), e.height];
         data.push(point);
     });
-    console.log(data);
 
     chart.addSeries({
         name: 'USA',
@@ -261,112 +318,3 @@ function makenumber(numb) {
     if (numb == 9)return "Neun";
     if (numb == 10)return "Zehn";
 }
-
-/**
- * Places the captcha numbers.
- */
-function placenumber() {
-    var x = Math.floor((Math.random() * 10) + 1);
-    var y = Math.floor((Math.random() * 10) + 1);
-    var no1 = makenumber(x);
-    var no2 = makenumber(y);
-    var ans = x + y;
-    document.getElementById('Antwort').pattern = ans;
-    document.getElementById("no1").innerHTML = no1;
-    document.getElementById("no2").innerHTML = no2;
-}
-
-$(function () {
-    $("#search_input").autocomplete({
-        minLength: 3,
-        source: function (request, response) {
-            geocoder = new google.maps.Geocoder();
-
-            geocoder.geocode({
-                'address': request.term
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    /*var searchLoc = results[0].geometry.location;
-                     var lat = results[0].geometry.location.lat();
-                     var lng = results[0].geometry.location.lng();
-                     var latlng = new google.maps.LatLng(lat, lng);
-                     var bounds = results[0].geometry.bounds;*/
-
-                    response($.map(results, function (loc) {
-                        return {
-                            label: loc.formatted_address,
-                            value: loc.formatted_address,
-                            pos: loc.geometry.location
-                        }
-                    }));
-                }
-            });
-        },
-        select: function (event, ui) {
-            /*  var pos = ui.item.position;
-             var lct = ui.item.locType;*/
-            var pos = ui.item.pos;
-
-            if (pos) {
-                setLocationMarker(pos);
-            }
-        }
-    });
-
-    /* Highcharts.chart('chartContainer', {
-     chart: {
-     type: 'area'
-     },
-     xAxis: {
-     title: {
-     text: 'Date/Time'
-     },
-     allowDecimals: false,
-     labels: {
-     formatter: function () {
-     return this.value; // clean, unformatted number for year
-     }
-     }
-     },
-     yAxis: {
-     title: {
-     text: 'Heights (in meters)'
-     },
-     labels: {
-     formatter: function () {
-     return this.value / 1000 + 'k';
-     }
-     }
-     },
-     tooltip: {
-     pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
-     },
-     plotOptions: {
-     area: {
-     pointStart: 1940,
-     marker: {
-     enabled: false,
-     symbol: 'circle',
-     radius: 2,
-     states: {
-     hover: {
-     enabled: true
-     }
-     }
-     }
-     }
-     },
-     series: [{
-     name: 'USA',
-     data: [null, null, null, null, null, 6, 11, 32, 110, 235, 369, 640,
-     1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,
-     27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662,
-     26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
-     24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586,
-     22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950,
-     10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104]
-     }]
-     });*/
-
-});
-
