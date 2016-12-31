@@ -5,10 +5,16 @@ $(document).ready(function () {
     initChart();
     initAutocomplete();
     initCaptcha();
-
-    $(document.body).find('#io_wrapper').on('click', '#search_button', function (event) {
+    // addEventHandlers();
+    $(document.body).find('main').on('click', '#location_button', function () {
         event.preventDefault();
-        var searchQuery = $('#actualLocation').val();
+        getGeolocation();
+    });
+
+    $(document.body).find('#destinationsuchen').on('click', '#search_button', function (event) {
+        event.preventDefault();
+        var location = $('#actualLocation').val();
+        geocodeAddress(location, geocoder);
     });
 
     $('#coordinatesLocationLng').change(function () {
@@ -68,36 +74,11 @@ function initMap() {
             lng: e.latLng.lng()
         });
     });
-    //infoWindow = new google.maps.InfoWindow({map: map});
 
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-            //infoWindow.setPosition(pos);
-            //infoWindow.setContent('Location found.');
-
-            setLocation(pos);
-        }, function () {
-            //handleLocationError(true, infoWindow, map.getCenter());
-            setLocation(pos);
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        //handleLocationError(false, infoWindow, map.getCenter());
-        setLocation(pos);
-    }
+    getGeolocation();
 
     geocoder = new google.maps.Geocoder();
 
-    document.getElementById('search_button').addEventListener('click', function () {
-        geocodeAddress(geocoder, map);
-    });
 }
 
 /**
@@ -118,18 +99,18 @@ function initAutocomplete() {
                         return {
                             label: loc.formatted_address,
                             value: loc.formatted_address,
-                            pos: loc.geometry.location
+                            lat: loc.geometry.location.lat(),
+                            lng: loc.geometry.location.lng()
                         }
                     }));
                 }
             });
         },
         select: function (event, ui) {
-            var pos = ui.item.pos;
+            pos = {lat: ui.item.lat, lng: ui.item.lng};
 
-            if (pos) {
+            if (pos)
                 setLocation(pos);
-            }
         }
     });
 }
@@ -139,32 +120,28 @@ function initAutocomplete() {
  */
 function initNavigation() {
     /*$(document.body).find('#ratings_section').hide();
-    $(document.body).find('#rate_section').hide();
+     $(document.body).find('#rate_section').hide();
 
 
-    $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
-        $(document.body).find('#ratings_section').hide();
-        $(document.body).find('#rate_section').hide();
-        $(document.body).find('#destinationsuchen').show();
-    });
+     $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
+     $(document.body).find('#ratings_section').hide();
+     $(document.body).find('#rate_section').hide();
+     $(document.body).find('#destinationsuchen').show();
+     });
 
-    $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
-        $(document.body).find('#ratings_section').show();
-        $(document.body).find('#rate_section').hide();
-        $(document.body).find('#destinationsuchen').hide();
-    });
+     $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
+     $(document.body).find('#ratings_section').show();
+     $(document.body).find('#rate_section').hide();
+     $(document.body).find('#destinationsuchen').hide();
+     });
 
-    $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
-        $(document.body).find('#ratings_section').hide();
-        $(document.body).find('#rate_section').show();
-        $(document.body).find('#destinationsuchen').hide();
-    });
+     $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
+     $(document.body).find('#ratings_section').hide();
+     $(document.body).find('#rate_section').show();
+     $(document.body).find('#destinationsuchen').hide();
+     });
 
-    */
-
-    $(document.body).find('main').on('click', '#location_button', function () {
-        alert("my location");
-    });
+     */
 }
 
 /**
@@ -239,8 +216,8 @@ function setLocation(pos) {
  * @param tideData response object of WorldTides API
  */
 function showTideData(tideData) {
-    myPos = { lat: parseFloat(tideData.requestLat), lng: parseFloat(tideData.requestLon) };
-    surfPos = { lat: parseFloat(tideData.responseLat), lng: parseFloat(tideData.responseLon) };
+    myPos = {lat: parseFloat(tideData.requestLat), lng: parseFloat(tideData.requestLon)};
+    surfPos = {lat: parseFloat(tideData.responseLat), lng: parseFloat(tideData.responseLon)};
     $('#coordinatesLocationLat').val(myPos.lat.toFixed(3));
     $('#coordinatesLocationLng').val(myPos.lng.toFixed(3));
     $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
@@ -251,40 +228,44 @@ function showTideData(tideData) {
     setChartData(tideData.heights);
 }
 
-/**
- * Show an error message due to Geolocation.
- * @param browserHasGeolocation
- * @param infoWindow
- * @param pos
- */
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
-        'Error: Your browser doesn\'t support geolocation.');
+function getGeolocation() {
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            setLocation(pos);
+        }, function () {
+            alert("Error: The Geolocation service failed");
+        });
+    } else {
+        alert("Error: Your Browser don't support Geolocation");
+    }
 }
 
-function geocodeAddress(geocoder, resultsMap) {
-    var address = document.getElementById('actualLocation').value;
+function geocodeAddress(address, geocoder) {
+    geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
-            resultsMap.setCenter(results[0].geometry.location);
-            setLocation(results[0].geometry.location);
+            pos = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
+            setLocation(pos);
         } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+            alert("Error: Geocode couldn't find any results.");
         }
     });
 }
 
 function geocodeLatLng(geocoder, pos, resultElement) {
     geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'location': pos}, function(results, status) {
+    geocoder.geocode({'location': pos}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             if (results[1]) {
                 resultElement.val(results[1].formatted_address);
             }
         } else {
-            return 'Geocoder failed due to: ' + status;
+            alert("Error: Geocode couldn't find any results.");
         }
     });
 }
