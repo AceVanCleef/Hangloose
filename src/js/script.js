@@ -1,25 +1,31 @@
-$(document).ready(function () {
-    var marker, surfMarker, map, chart, geocoder;
+var marker, surfMarker, map, chart, geocoder;
 
-    initNavigation();
+$(document).ready(function () {
+
     initChart();
     initAutocomplete();
     initCaptcha();
-    // addEventHandlers();
+
+    // show "Bewertungen" tab
+    $('#readRatings').show();
+
+    // Clickhandler find My Location
     $(document.body).find('main').on('click', '#location_button', function () {
         event.preventDefault();
         getGeolocation();
     });
 
+    // Clickhandler search destination with a query
     $(document.body).find('#destinationsuchen').on('click', '#search_button', function (event) {
         event.preventDefault();
         var location = $('#actualLocation').val();
         geocodeAddress(location, geocoder);
     });
 
+    // Listener for changes in coordinates latitude
     $('#coordinatesLocationLng').change(function () {
         var lng = $(this).val();
-        if (!isNaN(lng) && lng >= -180 && lat <= 180) {
+        if (!isNaN(lng) && lng >= -180 && lng <= 180) {
             setLocation(pos = {
                 lat: parseFloat($('#coordinatesLocationLat').val()),
                 lng: parseFloat(lng)
@@ -30,6 +36,7 @@ $(document).ready(function () {
         }
     });
 
+    // Listener for changes in coordinates longitude
     $('#coordinatesLocationLat').change(function () {
         var lat = $(this).val();
         if (!isNaN(lat) && lat >= -85.05115 && lat <= 85) {
@@ -42,14 +49,11 @@ $(document).ready(function () {
             alert("Error: Yout input isn't a correct coordinate for longitude!");
         }
     });
-
-    //Tab "Bewertungen" bei Seitenaufruf sichtbar
-    $('#readRatings').show();
 });
 
 
 /**
- * Initialize a Google Maps into the section with Geolocation.
+ * Initialize a Google Maps into the section with Geolocation. Called by script initialisation.
  */
 function initMap() {
     var pos;
@@ -113,35 +117,6 @@ function initAutocomplete() {
                 setLocation(pos);
         }
     });
-}
-
-/**
- * Initialize the tab links for navigation.
- */
-function initNavigation() {
-    /*$(document.body).find('#ratings_section').hide();
-     $(document.body).find('#rate_section').hide();
-
-
-     $(document.body).find('nav').on('click', '#destinationsuchenLink', function (event) {
-     $(document.body).find('#ratings_section').hide();
-     $(document.body).find('#rate_section').hide();
-     $(document.body).find('#destinationsuchen').show();
-     });
-
-     $(document.body).find('nav').on('click', '#ratingsLink', function (event) {
-     $(document.body).find('#ratings_section').show();
-     $(document.body).find('#rate_section').hide();
-     $(document.body).find('#destinationsuchen').hide();
-     });
-
-     $(document.body).find('nav').on('click', '#ratingsabgebenLink', function (event) {
-     $(document.body).find('#ratings_section').hide();
-     $(document.body).find('#rate_section').show();
-     $(document.body).find('#destinationsuchen').hide();
-     });
-
-     */
 }
 
 /**
@@ -222,12 +197,14 @@ function showTideData(tideData) {
     $('#coordinatesLocationLng').val(myPos.lng.toFixed(3));
     $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
     $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(3));
-    //alert(geocodeLatLng(geocoder, myPos));
     geocodeLatLng(geocoder, myPos, $('#actualLocation'));
     geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
 }
 
+/**
+ * Gets the actual Location and set the location on the map.
+ */
 function getGeolocation() {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
@@ -245,6 +222,11 @@ function getGeolocation() {
     }
 }
 
+/**
+ * Find coordinates with a search query and set the location on the map.
+ * @param address Search query
+ * @param geocoder Maps Geocoder object
+ */
 function geocodeAddress(address, geocoder) {
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': address}, function (results, status) {
@@ -257,6 +239,12 @@ function geocodeAddress(address, geocoder) {
     });
 }
 
+/**
+ * Find address with coordinates and show in resultElement.
+ * @param geocoder Maps Geocoder object
+ * @param pos Map location object (coordinates)
+ * @param resultElement Text input where the address is written
+ */
 function geocodeLatLng(geocoder, pos, resultElement) {
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({'location': pos}, function (results, status) {
@@ -272,7 +260,7 @@ function geocodeLatLng(geocoder, pos, resultElement) {
 
 /**
  * Call data of WorldTides API.
- * @param pos requested location pbject
+ * @param pos requested location object
  * @param errorFunction function called by failure
  * @param successFunction function called by success
  */
@@ -311,29 +299,9 @@ function setChartData(chartData) {
     });
 }
 
-/**
- * Check if the browser supports html5
- * @returns {boolean} true if supported
- */
-/*function hasHtml5Validation() {
- return typeof document.createElement('input').checkValidity === 'function';
- }
-
- if (hasHtml5Validation()) {
- $('.validate-form').submit(function (e) {
- if (!this.checkValidity()) {
- e.preventDefault();
- $(this).addClass('invalid');
- $('#status').html('invalid');
- } else {
- $(this).removeClass('invalid');
- $('#status').html('submitted');
- }
- });
- }*/
 
 /**
- * Generate text out of a numbers.
+ * Generate text out of a number.
  * @param numb number between 1-10
  * @returns {string} text of number
  */
@@ -350,10 +318,10 @@ function makenumber(numb) {
     if (numb == 10)return "Zehn";
 }
 
-/* Ermöglicht Wechsel zwischen den Tabs "Bewertungen" und "Gib deine Bewertung ab".
- *
- * @param evt   OnClick Event der Tabs.
- * @param ratingTab id der Zieldivs im DOM - Tree.
+/**
+ * Change Rating tabs.
+ * @param evt OnClick Event der Tabs
+ * @param ratingTab id der Zieldivs im DOM - Tree
  */
 function openRating(evt, ratingTab) {
     // Declare all variables
