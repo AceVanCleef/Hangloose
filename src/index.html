@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hangloose </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
+</script>
+<script type="text/javascript" src="js/script.js"></script>
+
+<body class="light-grey-bg">
+
+
+<header id="page_header" class="white-font grey-gradient-bg">
+    <h1>HANGLOOSE </h1>
+    <h4>You cant stop the waves but you can learn to surf</h4>
+</header>
+
+
+<main class="grid-container">
+    <section class="row">
+
+        <section id="io_wrapper" class="col-6 white-bg drop-shadow">
+
+            <section id="destinationsuchen">
+                <form>
+                    <fieldset>
+
+                        <legend>Surflocation</legend>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-5 control-label" for="actualLocation">Your Location</label>
+                            <div class="col-m-6">
+                                <input id="actualLocation"
+                                       placeholder="Location" class="text-input" type="text">
+                            </div>
+                        </section>
+
+                        <section class="row">
+                            <div class="col-m-5"></div>
+                            <div class="col-m-3">
+                                <button id="search_button" class="btn">GO!</button>
+                            </div>
+                            <div class="col-m-3">
+                                <button id="location_button" class="btn">My Location!</button>
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-5 control-label" for="coordinatesLocationLat">Coordinates</label>
+                            <div class="col-m-3">
+                                <input id="coordinatesLocationLat"
+                                       placeholder="Latitude" class="text-input" type="text">
+                            </div>
+                            <div class="col-m-3">
+                                <input id="coordinatesLocationLng"
+                                       placeholder="Longtitude" class="text-input" type="text">
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-5 control-label" for="surfspotLocation">Surfspot Location</label>
+                            <div class="col-m-6">
+                                <input id="surfspotLocation" placeholder="Surfspot Location" disabled
+                                       class="io-text-field" type="text">
+                                <!--<dialog id="surfspotLocation"></dialog> -->
+                            </div>
+                        </section>
+
+                        <!-- Text input-->
+                        <section class="row">
+                            <label class="col-m-5 control-label" for="coordinatesSurfspotLat">Coordinates</label>
+                            <div class="col-m-3">
+                                <input id="coordinatesSurfspotLat" disabled
+                                       placeholder="Latitude" class="io-text-field" type="text">
+                            </div>
+                            <div class="col-m-3">
+                                <input id="coordinatesSurfspotLng" disabled
+                                       placeholder="Longitude" class="io-text-field" type="text">
+                            </div>
+                        </section>
+                    </fieldset>
+                </form>
+
+            </section>
+        </section>
+
+        <aside id="map_wrapper" class="col-6 drop-shadow"></aside>
+
+
+    </section>
+    <section class="row">
+        <section id="wave_chart" class="col-m-12 white-bg drop-shadow">
+            <div id="chartContainer"></div>
+        </section>
+    </section>
+
+    <section class="row">
+        <section class="col-12 white-bg drop-shadow">   <!-- id="ratings_section"  entfernt -->
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks"
+                       onclick="openRating(event, 'readRatings')">Bewertungen</a></li>
+                <li><a href="javascript:void(0)" class="tablinks" onclick="openRating(event, 'createRating')">Gib deine
+                    Bewertung ab</a></li>
+            </ul>
+
+            <div id="readRatings" class="tabcontent">
+                <h3>Bewertungen anderer Surfer</h3>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img"/>
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img"/>
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+                <article class="row">
+                    <div class="col-m-4">
+                        <img src="https://dummyimage.com/600x400/aaa/fff.jpg" class="responsive-img"/>
+                    </div>
+                    <div class="col-m-2">
+                        <p>Rating: 4/5</p>
+                    </div>
+                    <div class="col-m-6">
+                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                            Mauris placerat eleifend leo.</p>
+                    </div>
+                </article>
+            </div>
+
+            <div id="createRating" class="tabcontent">
+                <h3>Bewerte diesen Surfspot</h3>
+                <section id="rate_section">
+                    <form action="textarea.html" method="post">
+
+                        <textarea id="text" name="text" cols="45" rows="12" class="text-input"></textarea>
+
+                        <form class="validate-form" method="post" action="neueSeite.html">
+
+                            <label for="text">Lade ein Bild dieses Surfspots hoch</label>
+                            <form action="upload.php" method="post" enctype="multipart/form-data">
+                                <input type="file" name="datei" class="btn"><br>
+                                <input type="submit" value="Ausgewählte Datei hochladen" class="btn"/>
+                            </form>
+                            <span id="status" style="display:none">Unsubmitted</span>
+
+                            <h4>CAPTCHA</h4>
+                            <p>Wieviele Haifische ergeben: <span id="no1"></span> plus <span id="no2"></span>?</p>
+
+                            <input name="answer" id="Antwort" pattern="7"
+                                   title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
+                                   placeholder="Gib eine Zahl ein" required>
+                            <input type="submit" value="senden" class="btn"/>
+                        </form>
+                    </form>
+                </section>
+            </div>
+
+
+        </section>
+    </section>
+
+</main>
+
+<footer id="page_footer" class="white-font mid-grey-bg">
+    <p>
+        &copy;2016 by Team Hangloose.
+    </p>
+</footer>
+
+</body>
+</html>

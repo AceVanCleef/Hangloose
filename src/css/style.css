@@ -1,0 +1,279 @@
+/* layout section */
+
+    /* includes margin & padding into width & height */
+    * {
+        box-sizing: border-box;
+    }
+
+    /* grid system (based on: http://www.w3schools.com/css/css_rwd_intro.asp) */
+        .grid-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 15px auto;
+        }
+        .row{
+            margin: 0 -15px 15px;
+        }
+        /* clear */
+        .row::before,
+        .row:after{
+            content: "";
+            clear: both;
+            display: table;
+        }
+        /* For mobile phones: */
+        [class*="col-"] {
+            width: 100%;
+        }
+        @media only screen and (min-width: 600px) {
+            /* For tablets: */
+            .col-m-1 {width: 8.33%;}
+            .col-m-2 {width: 16.66%;}
+            .col-m-3 {width: 25%;}
+            .col-m-4 {width: 33.33%;}
+            .col-m-5 {width: 41.66%;}
+            .col-m-6 {width: 50%;}
+            .col-m-7 {width: 58.33%;}
+            .col-m-8 {width: 66.66%;}
+            .col-m-9 {width: 75%;}
+            .col-m-10 {width: 83.33%;}
+            .col-m-11 {width: 91.66%;}
+            .col-m-12 {width: 100%;}
+        }
+        @media only screen and (min-width: 768px) {
+            /* For desktop: */
+            .col-1 {width: 8.33%;}
+            .col-2 {width: 16.66%;}
+            .col-3 {width: 25%;}
+            .col-4 {width: 33.33%;}
+            .col-5 {width: 41.66%;}
+            .col-6 {width: 50%;}
+            .col-7 {width: 58.33%;}
+            .col-8 {width: 66.66%;}
+            .col-9 {width: 75%;}
+            .col-10 {width: 83.33%;}
+            .col-11 {width: 91.66%;}
+            .col-12 {width: 100%;}
+        }
+        /* float */
+        [class*="col-"] {
+            float: left;
+            padding: 15px;
+            /*border: 1px solid black;    /*  Nur um Divs besser zu sehen, später löschen */
+        }
+
+        /* hide mechanic */
+            .hide {
+                display: none;
+            }
+            @media only screen and (max-width: 600px) {
+                /* For mobile: */
+                .hide-sm { display: none; }
+            }
+            @media only screen and (min-width: 600px) and (max-width: 768px) {
+                /* For tablets: */
+                .hide-m { display: none; }
+            }
+            @media only screen and (min-width: 768px) {
+                /* For desktop: */
+                .hide-l { display: none; }
+            }
+        /* END of hide mechanic */
+
+        /* responsive img */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    /* END of grid system */
+
+/* TODO: if background images, then use img files with diff. dimensions and media queries OR <picture> */
+
+    /* tabs */
+    ul.tab {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Float the list items side by side */
+    ul.tab li {float: left;}
+
+    /* Style the links inside the list items */
+    ul.tab li a {
+        display: inline-block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+    /* Change background color of links on hover */
+    ul.tab li a:hover {background-color: #ddd;}
+
+    /* Create an active/current tablink class */
+    ul.tab li a:focus, .active {background-color: #ccc;}
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+    /* END of tabs */
+
+    /* other layouting */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
+            padding: 10px;
+            margin: -10px;
+        }
+
+        header > *, footer > * {
+            text-align: center;
+        }
+
+        #map_wrapper {
+            height: 400px;
+            padding: 0;
+        }
+
+        img.responsive-img {
+            max-width: 100%;
+            height: auto;
+        }
+        main {
+            padding: 2%;
+        }
+        #io_wrapper form section.row{
+            margin: -10px 0px;
+        }
+    /* END of other layouting */
+
+
+
+
+/* END of layout section */
+
+
+
+/* look and feel section */
+
+    /* color classes (inspired by: http://www.w3schools.com/w3css/tryw3css_templates_social.htm) */
+    .grey-gradient-bg {
+        background: #4d636f; /* For browsers that do not support gradients */
+        background: -webkit-linear-gradient(#4d636f, #3a4b53); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#4d636f, #3a4b53); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#4d636f, #3a4b53); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#4d636f, #3a4b53); /* Standard syntax */
+    }
+    .dark-grey-bg {
+        background: #3a4b53;
+    }
+    .mid-grey-bg {
+        background: #4d636f;
+    }
+    .light-grey-bg {
+        background: #f5f7f8;
+    }
+    .white-bg {
+        background: #ffffff;
+    }
+    .white-font {
+        color: #ffffff;
+    }
+    /* END of color classes*/
+
+    /* form elements */
+    .btn {
+        background: #3a4b53;
+        color: #ffffff;
+        padding: 5px;
+        min-width: 100px;
+    }
+    .btn:hover {
+        background: #4d636f;
+    }
+    .btn:active {
+        border: 3px solid black;
+        margin: -3px;
+    }
+    .text-input {
+        border: none;
+        border-bottom: 1px solid black;
+        background: #f5f7f8;
+        width: 100%;
+    }
+    /* END of form elements */
+
+    .drop-shadow {
+        box-shadow: 10px 10px 5px grey;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        font-size: small;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+    }
+
+
+    #ratings, #io_wrapper {
+        padding: 2%;
+    }
+
+
+    .io-text-field {
+        width: 100%;
+    }
+
+    /* nav section */
+
+        nav {
+            width:100%;
+            height:50px;
+            padding: 4px 8px;
+            bottom: 0px;
+        }
+
+        nav a {
+            font-family: Helvetica, Verdana, Arial, Verdana, sans-serif;
+            text-align: center;
+            text-decoration: none;
+            text-space: 20px;
+            color: #000000;
+            font-weight: bold;
+            border-radius: 64px 64px 64px 64px;
+            -moz-border-radius: 64px 64px 64px 64px;
+            -webkit-border-radius: 64px 64px 64px 64px;
+
+            float: left;
+            width: 150px;
+            display: inline;
+            border: 1px solid;
+            margin: 10px;
+        }
+
+        nav a:hover, nav a:active {
+            text-decoration: none;
+            color: white;
+            background-color: red;
+        }
+    /* END of nav section */
+
+/* END of look and feel section */
+
+
+
