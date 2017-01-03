@@ -5,6 +5,43 @@
         box-sizing: border-box;
     }
 
+/* other layouting */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+header, footer {
+    border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
+    padding: 10px;
+    margin: -10px;
+}
+
+header > *, footer > * {
+    text-align: center;
+}
+
+#map_wrapper {
+    height: 400px;
+    padding: 0;
+}
+
+img.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+main {
+    padding: 2%;
+}
+#io_wrapper form section.row{
+    margin: -10px 0px;
+}
+/* END of other layouting */
+
+
+
+
     /* grid system (based on: http://www.w3schools.com/css/css_rwd_intro.asp) */
         .grid-container {
             width: 100%;
@@ -47,7 +84,10 @@
             .col-3 {width: 25%;}
             .col-4 {width: 33.33%;}
             .col-5 {width: 41.66%;}
-            .col-6 {width: 50%;}
+            .col-6 {
+                width: 50%;
+                height: 400px;
+            }
             .col-7 {width: 58.33%;}
             .col-8 {width: 66.66%;}
             .col-9 {width: 75%;}
@@ -128,39 +168,7 @@
     }
     /* END of tabs */
 
-    /* other layouting */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
 
-        header, footer {
-            border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
-            padding: 10px;
-            margin: -10px;
-        }
-
-        header > *, footer > * {
-            text-align: center;
-        }
-
-        #map_wrapper {
-            height: 400px;
-            padding: 0;
-        }
-
-        img.responsive-img {
-            max-width: 100%;
-            height: auto;
-        }
-        main {
-            padding: 2%;
-        }
-        #io_wrapper form section.row{
-            margin: -10px 0px;
-        }
-    /* END of other layouting */
 
 
 
