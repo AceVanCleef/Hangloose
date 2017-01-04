@@ -167,25 +167,39 @@
                 <h3>Bewerte diesen Surfspot</h3>
                 <section id="rate_section">
                     <form action="textarea.html" method="post">
+                        <section id="rating_points_section">
+                            <label for="rating_points">Punkte:</label>
+                            <select name="rating_points" id="rating_points">
+                                <option value="default" selected disabled>?/5</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </section>
 
                         <textarea id="text" name="text" cols="45" rows="12" class="text-input"></textarea>
 
-                        <form class="validate-form" method="post" action="neueSeite.html">
+                        <form class="validate-form row" method="post" action="neueSeite.html">
+                            <section class="col-6">
+                                <h4>Lade ein Bild dieses Surfspots hoch</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
+                                <form action="upload.php" method="post" enctype="multipart/form-data">
+                                    <input type="file" name="datei" class="btn"><br>
+                                    <input type="submit" value="Ausgewählte Datei hochladen" class="btn"/>
+                                </form>
+                                <span id="status" style="display:none">Unsubmitted</span>
+                            </section>
+                            <aside class="col-6">
+                                <h4>CAPTCHA</h4>
+                                <p>Wieviele Haifische ergeben addiert: <span id="no1"></span> plus <span id="no2"></span>?</p>
 
-                            <label for="text">Lade ein Bild dieses Surfspots hoch</label>
-                            <form action="upload.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="datei" class="btn"><br>
-                                <input type="submit" value="Ausgewählte Datei hochladen" class="btn"/>
-                            </form>
-                            <span id="status" style="display:none">Unsubmitted</span>
+                                <input name="answer" id="Antwort" pattern="7"
+                                       title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
+                                       placeholder="Gib eine Zahl ein" required>
+                                <input type="submit" value="Bewertung abschicken" class="btn"/>
+                            </aside>
 
-                            <h4>CAPTCHA</h4>
-                            <p>Wieviele Haifische ergeben addiert: <span id="no1"></span> plus <span id="no2"></span>?</p>
-
-                            <input name="answer" id="Antwort" pattern="7"
-                                   title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
-                                   placeholder="Gib eine Zahl ein" required>
-                            <input type="submit" value="Bewertung abschicken" class="btn"/>
                         </form>
                     </form>
                 </section>

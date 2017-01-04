@@ -5,42 +5,46 @@
         box-sizing: border-box;
     }
 
-/* other layouting */
-html, body {
-    width: 100%;
-    height: 100%;
-    font-size: small;
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+    /* other layouting */
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-size: small;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-header, footer {
-    border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
-    padding: 10px;
-    margin: -10px;
-}
+        header, footer {
+            border: 1px solid black; /*  Nur um Divs besser zu sehen, später löschen */
+            padding: 10px;
+            margin: -10px;
+        }
 
-header > *, footer > * {
-    text-align: center;
-}
+        header > *, footer > * {
+            text-align: center;
+        }
 
-#map_wrapper {
-    height: 400px;
-    padding: 0;
-}
+        #map_wrapper {
+            height: 400px;
+            padding: 0;
+        }
 
-img.responsive-img {
-    max-width: 100%;
-    height: auto;
-}
-main {
-    padding: 2%;
-}
-#io_wrapper form section.row{
-    margin: -10px 0px;
-}
-/* END of other layouting */
+        img.responsive-img {
+            max-width: 100%;
+            height: auto;
+        }
+        main {
+            padding: 2%;
+        }
+        #io_wrapper form section.row{
+            margin: -10px 0px;
+        }
+        #rating_points_section {
+            margin: 20px 0 15px;
+        }
+
+    /* END of other layouting */
 
 
 
@@ -87,16 +91,14 @@ main {
             .col-3 {width: 25%;}
             .col-4 {width: 33.33%;}
             .col-5 {width: 41.66%;}
-            .col-6 {
-                width: 50%;
-                height: 400px;
-            }
+            .col-6 {width: 50%;}
             .col-7 {width: 58.33%;}
             .col-8 {width: 66.66%;}
             .col-9 {width: 75%;}
             .col-10 {width: 83.33%;}
             .col-11 {width: 91.66%;}
             .col-12 {width: 100%;}
+            #io_wrapper, #map_wrapper { height: 400px; }
         }
         /* float */
         [class*="col-"] {
