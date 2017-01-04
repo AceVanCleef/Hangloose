@@ -49,6 +49,11 @@ $(document).ready(function () {
             alert("Error: Yout input isn't a correct coordinate for longitude!");
         }
     });
+
+    $('#rating_points').barrating({
+        theme: 'fontawesome-stars'
+    });
+
 });
 
 
