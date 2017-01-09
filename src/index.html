@@ -179,7 +179,8 @@
                             </select>
                         </section>
 
-                        <textarea id="text" name="text" cols="45" rows="12" class="text-input"></textarea>
+                        <input id="rating_title" type="text" name="rating_title" placeholder="Titel" class="text-input"/>
+                        <textarea id="rating_text" name="text" cols="45" rows="12" class="text-input"></textarea>
 
                         <form class="validate-form row" method="post" action="neueSeite.html">
                             <section class="col-6">
@@ -197,7 +198,7 @@
                                 <input name="answer" id="Antwort" pattern="7"
                                        title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
                                        placeholder="Gib eine Zahl ein" required>
-                                <input type="submit" value="Bewertung abschicken" class="btn"/>
+                                <input id="submit_rating" type="submit" value="Bewertung abschicken" class="btn"/>
                             </aside>
 
                         </form>

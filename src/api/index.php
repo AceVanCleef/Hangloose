@@ -21,7 +21,7 @@
      *
      * */
 
-    define('QUERY_STRING', 'mysql:host=localhost:3306;dbname=moviequotes;charset=utf8');
+    define('QUERY_STRING', 'mysql:host=localhost:3306;dbname=hangloose;charset=utf8');
     define('DB_USER', 'TestAdmin');
     define('DB_PWD', 'webec');
 
@@ -38,14 +38,14 @@
      */
     $id = array();
 
-/*
-    $app->get('/film-quote?id={id}&codeword={word}', function($request, $response, $args) {
-        $id = $request->getQueryParams();
-        var_dump($id);
-        //return getFilmQuote($response, "SELECT * FROM quotes WHERE id = {$id['id']}");
 
+    /**
+     *  Test query
+     */
+    $app->get('/test/{nr}', function($request, $response, $args) {
+
+        echo("Hallo");
     });
-*/
 
 
    $app->get('/film-quote/{id}', function($request, $response, $args) {

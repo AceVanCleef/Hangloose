@@ -49,7 +49,33 @@ $(document).ready(function () {
             alert("Error: Yout input isn't a correct coordinate for longitude!");
         }
     });
+
+    //REST
+    $('#submit_rating').click( function(){
+        var toVerify = $('#Antwort').val();
+        if(x + y == toVerify){
+            console.log(toVerify);
+            getReqTest();
+        } else {
+            alert("Inkorrekter Wert. Bitte versuche es nochmals.");
+        }
+    });
+
 });
+
+//REST
+function getReqTest() {
+    var lat = $('#coordinatesLocationLat').val();
+    var lng = $('#coordinatesLocationLng').val();
+
+    var ratPoints = $('#rating_points').val();
+    var ratTitle =  $('#rating_title').val();
+    var ratText = $('#rating_text').val();
+    var imgPath = $('#rate_section').find('input[type=file]').val();
+
+    console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' +ratTitle + ', ' + ratText + ', ' + imgPath);
+
+}
 
 
 /**
@@ -156,13 +182,14 @@ function initChart() {
 /**
  * Places the captcha numbers.
  */
+var x; var y;
 function initCaptcha() {
-    var x = Math.floor((Math.random() * 10) + 1);
-    var y = Math.floor((Math.random() * 10) + 1);
+    x = Math.floor((Math.random() * 10) + 1);
+    y = Math.floor((Math.random() * 10) + 1);
     var no1 = makenumber(x);
     var no2 = makenumber(y);
     var ans = x + y;
-    document.getElementById('Antwort').pattern = ans;
+    //document.getElementById('Antwort').pattern = ans;
     document.getElementById("no1").innerHTML = no1;
     document.getElementById("no2").innerHTML = no2;
 }
@@ -343,3 +370,4 @@ function openRating(evt, ratingTab) {
     document.getElementById(ratingTab).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
