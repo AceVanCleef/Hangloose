@@ -4,17 +4,21 @@
     require '../vendor/autoload.php';;
 
     /*
-     * (a) Es gibt eine Ressource: Die Film-Quote.
+     * (a) Es gibt zwei Ressourcen: Die Ratings und die Locations.
      *
      *
      * (b) Das sind die URL's mit den entsprechenden Methoden:
      *
-     *     Film-Quote anlegen:   /api/film-quotes      (POST)
-     *     Film-Quote abfragen:  /api/film-quote/id    (GET)
-     *     Film-Quote ändern:    /api/film-quote/id    (PUT)
-     *     Film-Quote löschen:   /api/film-quote/id    (DELETE)
+     *      Locations:
+     *      Neue Lokation anlegen:      /api/locations      (POST)  // Hinweis: in $.ajax() zuerst aufrufen, danach ratings (POST)
+     *      Lokation abfragen:          /api/location/id    (GET) //evtl überflüssig
      *
-     *     Zufällige Film-Quote anzeigen: /api/random-film-quote  (GET, vgl. REST Skript, Folie 12, Ressource als Funktion)
+     *
+     *      Ratings:
+     *      Neue Bewertung anlegen:     /api/ratings        (POST)
+     *      Bewertung abfragen:         /api/rating/id      (GET)
+     *      Bewertungen abfragen:       /api/ratings        (GET)
+     *
      *
      *
      *     BEMERKUNG: Damit dieser Code läuft, muss die Aufgabe 9 implementiert sein und die Datenbank bestehen.
@@ -44,18 +48,29 @@
      */
     $app->get('/test/{nr}', function($request, $response, $args) {
 
-        echo("Hallo");
+        echo('{response: "hallo"}');
     });
 
 
+    $app->get('/ratings?latitude={lat}&longitude={lng}', function($request, $response, $args) {
+
+        $foo = $response->getParams();
+
+        echo('{response: "hallo2"} latitude: ' . $args['lat'] . ' longitude: ' . $args['lng']);
+        //return getRating($response, "SELECT * FROM rating;");
+    });
+
+
+
+//--------------------------------------------------------------------------------------------------
    $app->get('/film-quote/{id}', function($request, $response, $args) {
 
-        return getFilmQuote($response, "SELECT * FROM quotes WHERE id = {$args['id']}");
+        return getRating($response, "SELECT * FROM quotes WHERE id = {$args['id']}");
     });
 
     $app->get('/random-film-quote', function($request, $response)  {
 
-        return getFilmQuote($response, 'SELECT * FROM quotes ORDER BY RAND() LIMIT 0,1');
+        return getRating($response, 'SELECT * FROM quotes ORDER BY RAND() LIMIT 0,1');
     });
 
     $app->post('/film-quotes', function($request, $response) {
@@ -99,24 +114,24 @@
      * @param  Ein String mit einem gültigen SQL Query
      * @return Das Response Object
      */
-    function getFilmQuote($response, $query) {
+    function getRating($response, $query) {
 
         try {
 
             $db = getDBConnection($response);
 
-            $selectQuote = $db->prepare($query);
+            $selectRating = $db->prepare($query);
 
-            if($selectQuote->execute()) {
+            if($selectRating->execute()) {
 
-                $quoteOfTheDay = $selectQuote->fetch(PDO::FETCH_ASSOC);
+                $ratings = $selectRating->fetch(PDO::FETCH_ASSOC);
 
-                if($selectQuote->rowCount() > 0) {
+                if($selectRating->rowCount() > 0) {
 
                     date_default_timezone_set(TIME_ZONE);
-                    $quoteOfTheDay[DATE_FIELD_NAME] = date(DATE_FORMAT);
+                    $ratings[DATE_FIELD_NAME] = date(DATE_FORMAT);
 
-                    return $response->withJson($quoteOfTheDay);
+                    return $response->withJson($ratings);
                 }
                 else {
 

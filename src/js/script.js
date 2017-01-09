@@ -68,6 +68,16 @@ $(document).ready(function () {
 
 });
 
+var restUrls = {
+    testUrl :     'http://localhost:8080/hangloose/src/api/test/1',
+    getRatings:   'http://localhost:8080/hangloose/src/api/ratings',
+    getRating:   'http://localhost:8080/hangloose/src/api/rating/id',
+    postRating:   'http://localhost:8080/hangloose/src/api/ratings',
+    postLocation:   'http://localhost:8080/hangloose/src/api/locations'
+
+};
+
+
 //REST
 function getReqTest() {
     var lat = $('#coordinatesLocationLat').val();
@@ -80,6 +90,32 @@ function getReqTest() {
 
     console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' +ratTitle + ', ' + ratText + ', ' + imgPath);
 
+    // params: '../ratings?latitude=lat&longitude=lng'
+    var params = $.param({
+        latitude: lat,
+        longitude: lng});
+    console.log(params);
+    // source: http://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
+
+    // '& as undefined in url' - fix
+    var params_clean  = params.replace('&', '%26');
+    console.log(params_clean);
+
+    //Data : für JSON - Objekte
+    $.ajax({
+        url: restUrls.getRatings + '?' + params_clean,
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true,
+        data: JSON,
+        error: function (msg) {
+            console.log(msg);
+            alert('transmition failed:' + msg);
+        },
+        success: function (data) {
+            alert(data);
+        }
+    });
 }
 
 
