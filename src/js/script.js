@@ -50,15 +50,20 @@ $(document).ready(function () {
         }
     });
 
+
     //REST
-    $('#submit_rating').click( function(){
+    $('#submit_rating').click( function() {
         var toVerify = $('#Antwort').val();
-        if(x + y == toVerify){
+        if (x + y == toVerify) {
             console.log(toVerify);
             getReqTest();
         } else {
             alert("Inkorrekter Wert. Bitte versuche es nochmals.");
         }
+    });
+
+    $('#rating_points').barrating({
+        theme: 'fontawesome-stars'
     });
 
 });
