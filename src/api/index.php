@@ -4,24 +4,10 @@
     require '../vendor/autoload.php';;
 
     /*
-     * (a) Es gibt zwei Ressourcen: Die Ratings und die Locations.
+     * REST
      *
-     *
-     * (b) Das sind die URL's mit den entsprechenden Methoden:
-     *
-     *      Locations:
-     *      Neue Lokation anlegen:      /api/locations      (POST)  // Hinweis: in $.ajax() zuerst aufrufen, danach ratings (POST)
-     *      Lokation abfragen:          /api/location/id    (GET) //evtl überflüssig
-     *
-     *
-     *      Ratings:
-     *      Neue Bewertung anlegen:     /api/ratings        (POST)
-     *      Bewertung abfragen:         /api/rating/id      (GET)
-     *      Bewertungen abfragen:       /api/ratings        (GET)
-     *
-     *
-     *
-     *     BEMERKUNG: Damit dieser Code läuft, muss die Aufgabe 9 implementiert sein und die Datenbank bestehen.
+     *      Neue Bewertung anlegen:     /api/rating             (POST)
+     *      Bewertungen abfragen:       /api/ratings/lat/lng    (GET)
      *
      * */
 
