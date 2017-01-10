@@ -52,7 +52,7 @@ $(document).ready(function () {
 
 
     //REST
-    $('#submit_rating').click( function() {
+    $('#submit_rating').click(function () {
         var toVerify = $('#Antwort').val();
         if (x + y == toVerify) {
             console.log(toVerify);
@@ -69,11 +69,11 @@ $(document).ready(function () {
 });
 
 var restUrls = {
-    testUrl :     'http://localhost:8080/hangloose/src/api/test/1',
-    getRatings:   'http://localhost:8080/hangloose/src/api/ratings/',
-    getRating:   'http://localhost:8080/hangloose/src/api/rating/id',
-    postRating:   'http://localhost:8080/hangloose/src/api/ratings',
-    postLocation:   'http://localhost:8080/hangloose/src/api/locations'
+    testUrl: 'http://localhost:8080/hangloose/src/api/test/1',
+    getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
+    getRating: 'http://localhost:8080/hangloose/src/api/rating/id',
+    postRating: 'http://localhost:8080/hangloose/src/api/ratings',
+    postLocation: 'http://localhost:8080/hangloose/src/api/locations'
 
 };
 
@@ -84,21 +84,22 @@ function getReqTest() {
     var lng = $('#coordinatesLocationLng').val();
 
     var ratPoints = $('#rating_points').val();
-    var ratTitle =  $('#rating_title').val();
+    var ratTitle = $('#rating_title').val();
     var ratText = $('#rating_text').val();
     var imgPath = $('#rate_section').find('input[type=file]').val();
 
-    console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' +ratTitle + ', ' + ratText + ', ' + imgPath);
+    console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' + ratTitle + ', ' + ratText + ', ' + imgPath);
 
     // params: '../ratings?latitude=lat&longitude=lng'
     var params = $.param({
         latitude: lat,
-        longitude: lng});
+        longitude: lng
+    });
     console.log(params);
     // source: http://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 
     // '& as undefined in url' - fix
-    var params_clean  = params.replace('&', '%26');
+    var params_clean = params.replace('&', '%26');
     console.log(params_clean);
 
     //Data : für JSON - Objekte
@@ -223,7 +224,8 @@ function initChart() {
 /**
  * Places the captcha numbers.
  */
-var x; var y;
+var x;
+var y;
 function initCaptcha() {
     x = Math.floor((Math.random() * 10) + 1);
     y = Math.floor((Math.random() * 10) + 1);
@@ -251,7 +253,7 @@ function setLocation(pos) {
         marker.setPosition(pos);
         map.setCenter(surfPos);
         showTideData(tideData);
-        showRatings(surfPos);
+        showRatings({lat: 4.444, lng: 5.555});
     });
 }
 
@@ -262,10 +264,10 @@ function setLocation(pos) {
 function showTideData(tideData) {
     myPos = {lat: parseFloat(tideData.requestLat), lng: parseFloat(tideData.requestLon)};
     surfPos = {lat: parseFloat(tideData.responseLat), lng: parseFloat(tideData.responseLon)};
-    $('#coordinatesLocationLat').val(myPos.lat.toFixed(3));
-    $('#coordinatesLocationLng').val(myPos.lng.toFixed(3));
-    $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
-    $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(3));
+    $('#coordinatesLocationLat').val(myPos.lat.toFixed(6));
+    $('#coordinatesLocationLng').val(myPos.lng.toFixed(6));
+    $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(6));
+    $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(6));
     geocodeLatLng(geocoder, myPos, $('#actualLocation'));
     geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
@@ -276,6 +278,7 @@ function showTideData(tideData) {
  * @param pos coordinates
  */
 function showRatings(pos) {
+    var table = $(document.body).find('#readRatings');
     $.ajax({
         url: restUrls.getRatings + pos.lat + '/' + pos.lng,
         dataType: 'json',
@@ -285,8 +288,37 @@ function showRatings(pos) {
             alert(msg);
         },
         success: function (data) {
-            console.log(data);
+            table.empty();
+            data.forEach(function (e) {
+                table.append(createEntry(e));
+                barrating();
+            });
         }
+    });
+}
+
+function createEntry(data) {
+    var imgHidden = '';
+    if (data.RAT_PICTURE_PATH == null)
+        imgHidden = 'hidden';
+
+    var article = '<article class="row"><div class="col-m-6"><b>' +
+        data.RAT_TITLE + '</b><p>' + data.RAT_COMMENT + '</p></div><div class="col-m-2"><p><select data-current-rating="' + data.RAT_POINTS + '"  class="starrating">' +
+        '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4' +
+        '</option><option value="5">5</option></select></p></div><div class="col-m-4"><img ' + imgHidden + 'src="img/ratings/' + data.RAT_PICTURE_PATH +
+        '" class="responsive-img"/></div></article>';
+
+    return article;
+}
+
+function barrating() {
+    $('#readRatings select').each(function(index, select) {
+        var currentRating = $(select).data('current-rating');
+        $(select).barrating({
+            theme: 'fontawesome-stars',
+            readonly: true,
+            initialRating: currentRating,
+        });
     });
 }
 
@@ -354,7 +386,7 @@ function geocodeLatLng(geocoder, pos, resultElement) {
  */
 function getTideData(pos, errorFunction, successFunction) {
     $.ajax({
-        url: 'https://www.worldtides.info/api?heights&key=9ce9447c-6193-48a6-acf4-16d43c8b0915&lat=' + pos.lat + '&lon=' + pos.lng,
+        url: 'https://www.worldtides.info/api?heights&key=a9b7587f-73a5-4b34-b643-18a493c7c3e3&lat=' + pos.lat + '&lon=' + pos.lng,
         dataType: 'json',
         type: 'GET',
         crossDomain: true,
