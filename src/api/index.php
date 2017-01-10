@@ -42,24 +42,9 @@
      */
     $id = array();
 
-
-    /**
-     *  Test query
-     */
-    $app->get('/test/{nr}', function($request, $response, $args) {
-
-        echo('{response: "hallo"}');
+    $app->get('/ratings/{lat}/{lng}', function($request, $response, $args) {
+        return getRatings($response, $args);
     });
-
-
-    $app->get('/ratings?latitude={lat}&longitude={lng}', function($request, $response, $args) {
-
-        $foo = $response->getParams();
-
-        echo('{response: "hallo2"} latitude: ' . $args['lat'] . ' longitude: ' . $args['lng']);
-        //return getRating($response, "SELECT * FROM rating;");
-    });
-
 
 
 //--------------------------------------------------------------------------------------------------
@@ -104,6 +89,21 @@
         catch(PDOException $e) {
 
             throw new Exception('Database connection could not be established.');
+        }
+    }
+
+    function getRatings($response, $args) {
+        try {
+            $db = getDBConnection($response);
+            $selectRatings = $db->prepare("SELECT * FROM rating INNER JOIN location ON rating.RAT_LOCATION_ID = location.LOC_ID WHERE location.LOC_LAT = {$args['lat']} AND location.LOC_LNG = {$args['lng']};");
+
+            if($selectRatings->execute()) {
+
+            }
+        }
+        catch(Exception $e) {
+
+            return $response->write($e->getMessage())->withStatus(503);
         }
     }
 
@@ -196,97 +196,6 @@
             else {
 
                 return $response->write('Error inserting in database.')->withStatus(500);
-            }
-        }
-        catch(Exception $e) {
-
-            return $response->write($e->getMessage())->withStatus(503);
-        }
-    }
-
-
-    /**
-     * Updates eine bestehende Film-Quote.
-     *
-     * @param $response  Das Response Object
-     * @param $jsonData  Die Film-Quote als JSON
-     * @param $id Die ID der Film-Quote
-     * @return Das Response Object
-     */
-    function updateFilmQuote($response, $jsonData, $id) {
-
-        try {
-
-            $db = getDBConnection($response);
-
-            $stmt = $db->prepare("UPDATE quotes SET title=:title, quote=:quote, movie_character=:movie_character, actor=:actor, year=:year WHERE id={$id}");
-
-            $stmt = bindParameters($stmt, $jsonData);
-
-            if($stmt->execute()) {
-
-                // Hier wird nicht unterschieden zwischen:
-                // (i)  Keine Row gefunden mit dieser ID (HTTP Status 404) und
-                // (ii) Keine Änderung in den Daten, 0 Rows affected (HTTP Status 200)
-                //
-                // Wie würden Sie das Implementieren?
-
-                if($stmt->rowCount() > 0) {
-
-                    // HTTP Status 200 wird automatisch gesetzt.
-                    $jsonData['id'] = $id;
-
-                    return $response->withJson($jsonData);
-                }
-                else {
-
-                    return $response
-                            ->write('No Film-Quote found to update (row not found, or data are up to date).')
-                            ->withStatus(404);
-                }
-            }
-            else {
-
-                return $response->write('Error inserting in database.')->withStatus(500);
-            }
-
-        }
-        catch(Exception $e) {
-
-            return $response->write($e->getMessage())->withStatus(503);
-        }
-    }
-
-
-    /**
-     * Löscht ein Film-Quote für eine gegebene ID.
-     *
-     * @param $response  Das Response Object
-     * @param $id Die ID der Film-Quote
-     * @return Das Response Object
-     */
-    function deleteFilmQuote($response, $id) {
-
-        try {
-
-            $db = getDBConnection($response);
-
-            $stmt = $db->prepare("DELETE FROM quotes WHERE id = {$id}" );
-
-            if($stmt->execute()) {
-
-                if($stmt->rowCount() > 0) {
-
-                    return $response->withJSON(array('id' => $id));
-                }
-                else {
-
-                    return $response->write('Film-Quote not found.')->withStatus(404);
-                }
-            }
-            else {
-
-                return $response->write('Error in quering database.')->withStatus(500);
             }
         }
         catch(Exception $e) {
