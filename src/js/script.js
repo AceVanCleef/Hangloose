@@ -98,8 +98,8 @@ function getReqTest() {
     // source: http://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 
     // '& as undefined in url' - fix
-    var params_clean  = params.replace('&', '%26');
-    console.log(params_clean);
+    //var params_clean  = params.replace('&', '%26');
+    //console.log(params_clean);
 
     //Data : für JSON - Objekte
     $.ajax({

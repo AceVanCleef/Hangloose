@@ -4,18 +4,15 @@
     require '../vendor/autoload.php';;
 
     /*
-     * (a) Es gibt zwei Ressourcen: Die Ratings und die Locations.
+     * (a) Es gibt zwei Ressourcen: Die Ratings.
      *
      *
      * (b) Das sind die URL's mit den entsprechenden Methoden:
      *
-     *      Locations:
-     *      Neue Lokation anlegen:      /api/locations      (POST)  // Hinweis: in $.ajax() zuerst aufrufen, danach ratings (POST)
-     *      Lokation abfragen:          /api/location/id    (GET) //evtl überflüssig
      *
      *
      *      Ratings:
-     *      Neue Bewertung anlegen:     /api/ratings        (POST)
+     *      Neue Bewertung anlegen:     /api/ratings/{lat}/{long}        (POST)
      *      Bewertung abfragen:         /api/rating/id      (GET)
      *      Bewertungen abfragen:       /api/ratings        (GET)
      *
@@ -25,9 +22,11 @@
      *
      * */
 
-    define('QUERY_STRING', 'mysql:host=localhost:3306;dbname=hangloose;charset=utf8');
+/*    define('QUERY_STRING', 'mysql:host=localhost:3306;dbname=hangloose;charset=utf8');
     define('DB_USER', 'TestAdmin');
-    define('DB_PWD', 'webec');
+    define('DB_PWD', 'webec');*/
+
+    require('api_config.php');
 
     define('TIME_ZONE', 'UTC');
     define('DATE_FORMAT', 'd\.m\.Y');
@@ -52,12 +51,12 @@
     });
 
 
-    $app->get('/ratings?latitude={lat}&longitude={lng}', function($request, $response, $args) {
+    $app->get('/ratings', function($request, $response, $args) {
 
         $foo = $response->getParams();
 
-        echo('{response: "hallo2"} latitude: ' . $args['lat'] . ' longitude: ' . $args['lng']);
-        //return getRating($response, "SELECT * FROM rating;");
+
+        return $response->write($foo['lat']);
     });
 
 
