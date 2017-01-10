@@ -32,7 +32,7 @@ $(document).ready(function () {
             });
         }
         else {
-            alert("Error: Yout input isn't a correct coordinate for latitude!");
+            alert("Error: Your input isn't a correct coordinate for latitude!");
         }
     });
 
@@ -70,7 +70,7 @@ $(document).ready(function () {
 
 var restUrls = {
     testUrl :     'http://localhost:8080/hangloose/src/api/test/1',
-    getRatings:   'http://localhost:8080/hangloose/src/api/ratings',
+    getRatings:   'http://localhost:8080/hangloose/src/api/ratings/',
     getRating:   'http://localhost:8080/hangloose/src/api/rating/id',
     postRating:   'http://localhost:8080/hangloose/src/api/ratings',
     postLocation:   'http://localhost:8080/hangloose/src/api/locations'
@@ -251,6 +251,7 @@ function setLocation(pos) {
         marker.setPosition(pos);
         map.setCenter(surfPos);
         showTideData(tideData);
+        showRatings(surfPos);
     });
 }
 
@@ -268,6 +269,25 @@ function showTideData(tideData) {
     geocodeLatLng(geocoder, myPos, $('#actualLocation'));
     geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
+}
+
+/**
+ * Displays the ratings into the frontend.
+ * @param pos coordinates
+ */
+function showRatings(pos) {
+    $.ajax({
+        url: restUrls.getRatings + pos.lat + '/' + pos.lng,
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true,
+        error: function (msg) {
+            alert(msg);
+        },
+        success: function (data) {
+            console.log(data);
+        }
+    });
 }
 
 /**
