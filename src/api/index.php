@@ -1,8 +1,8 @@
 <?php
 
 
-require '../vendor/autoload.php';
-require('api_config.php');
+    require '../vendor/autoload.php';
+    require('api_config.php');
 
 /*
  * REST
@@ -11,6 +11,7 @@ require('api_config.php');
  *      Bewertungen abfragen:       /api/ratings/lat/lng    (GET)
  *
  * */
+
 
 define('TIME_ZONE', 'UTC');
 define('DATE_FORMAT', 'd\.m\.Y');
@@ -24,10 +25,45 @@ $app = new \Slim\App();
  */
 $id = array();
 
+
+
+    /**
+     * Die SLIM Routes.
+     */
+    $id = array();
+
+    /**
+     *  Test query
+     */
+    $app->get('/test/{nr}', function($request, $response, $args) {
+
+        echo('{response: "hallo"}');
+    });
+
+
+
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
     return getRatings($response, $args);
 });
 
+
+    // Stefan
+    $app->post('/rating', function($request, $response, $args) {
+        $json_data = $request->getParsedBody();
+        $json_data['ratPoints'] = 2;
+      //  $json_data['']
+        /*$temp = createRating($response,
+            "INSERT INTO `rating` (`RAT_ID`, `RAT_COMMENT`, `RAT_POINTS`, `RAT_TITLE`, `RAT_PICTURE_PATH`, `RAT_LOCATION_ID`) 
+            VALUES ('4', 'abc abc', '2', 'hello title', NULL, '2');");*/
+
+        return $response->withJson($json_data, 201);
+
+        //return getRatings($response, $args);
+    });
+
+    function createRating($response, $query){
+
+    }
 
 //--------------------------------------------------------------------------------------------------
 $app->get('/film-quote/{id}', function ($request, $response, $args) {
