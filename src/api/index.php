@@ -1,30 +1,16 @@
 <?php
 
 
-    require '../vendor/autoload.php';;
+    require '../vendor/autoload.php';
 
     /*
-     * (a) Es gibt zwei Ressourcen: Die Ratings.
+     * REST
      *
-     *
-     * (b) Das sind die URL's mit den entsprechenden Methoden:
-     *
-     *
-     *
-     *      Ratings:
-     *      Neue Bewertung anlegen:     /api/ratings/{lat}/{long}        (POST)
-     *      Bewertung abfragen:         /api/rating/id      (GET)
-     *      Bewertungen abfragen:       /api/ratings        (GET)
-     *
-     *
-     *
-     *     BEMERKUNG: Damit dieser Code läuft, muss die Aufgabe 9 implementiert sein und die Datenbank bestehen.
+     *      Neue Bewertung anlegen:     /api/rating             (POST)
+     *      Bewertungen abfragen:       /api/ratings/lat/lng    (GET)
      *
      * */
 
-/*    define('QUERY_STRING', 'mysql:host=localhost:3306;dbname=hangloose;charset=utf8');
-    define('DB_USER', 'TestAdmin');
-    define('DB_PWD', 'webec');*/
 
     require('api_config.php');
 
@@ -39,8 +25,7 @@
     /**
      * Die SLIM Routes.
      */
-    $id = array();
-
+    //$id = array();
 
     /**
      *  Test query
@@ -51,15 +36,28 @@
     });
 
 
-    $app->get('/ratings', function($request, $response, $args) {
 
-        $foo = $response->getParams();
-
-
-        return $response->write($foo['lat']);
+    $app->get('/ratings/{lat}/{lng}', function($request, $response, $args) {
+        return getRatings($response, $args);
     });
 
+    // Stefan
+    $app->post('/rating', function($request, $response, $args) {
+        $json_data = $request->getParsedBody();
+        $json_data['ratPoints'] = 2;
+      //  $json_data['']
+        /*$temp = createRating($response,
+            "INSERT INTO `rating` (`RAT_ID`, `RAT_COMMENT`, `RAT_POINTS`, `RAT_TITLE`, `RAT_PICTURE_PATH`, `RAT_LOCATION_ID`) 
+            VALUES ('4', 'abc abc', '2', 'hello title', NULL, '2');");*/
 
+        return $response->withJson($json_data, 201);
+
+        //return getRatings($response, $args);
+    });
+
+    function createRating($response, $query){
+
+    }
 
 //--------------------------------------------------------------------------------------------------
    $app->get('/film-quote/{id}', function($request, $response, $args) {
@@ -103,6 +101,21 @@
         catch(PDOException $e) {
 
             throw new Exception('Database connection could not be established.');
+        }
+    }
+
+    function getRatings($response, $args) {
+        try {
+            $db = getDBConnection($response);
+            $selectRatings = $db->prepare("SELECT * FROM rating INNER JOIN location ON rating.RAT_LOCATION_ID = location.LOC_ID WHERE location.LOC_LAT = {$args['lat']} AND location.LOC_LNG = {$args['lng']};");
+
+            if($selectRatings->execute()) {
+
+            }
+        }
+        catch(Exception $e) {
+
+            return $response->write($e->getMessage())->withStatus(503);
         }
     }
 
@@ -195,97 +208,6 @@
             else {
 
                 return $response->write('Error inserting in database.')->withStatus(500);
-            }
-        }
-        catch(Exception $e) {
-
-            return $response->write($e->getMessage())->withStatus(503);
-        }
-    }
-
-
-    /**
-     * Updates eine bestehende Film-Quote.
-     *
-     * @param $response  Das Response Object
-     * @param $jsonData  Die Film-Quote als JSON
-     * @param $id Die ID der Film-Quote
-     * @return Das Response Object
-     */
-    function updateFilmQuote($response, $jsonData, $id) {
-
-        try {
-
-            $db = getDBConnection($response);
-
-            $stmt = $db->prepare("UPDATE quotes SET title=:title, quote=:quote, movie_character=:movie_character, actor=:actor, year=:year WHERE id={$id}");
-
-            $stmt = bindParameters($stmt, $jsonData);
-
-            if($stmt->execute()) {
-
-                // Hier wird nicht unterschieden zwischen:
-                // (i)  Keine Row gefunden mit dieser ID (HTTP Status 404) und
-                // (ii) Keine Änderung in den Daten, 0 Rows affected (HTTP Status 200)
-                //
-                // Wie würden Sie das Implementieren?
-
-                if($stmt->rowCount() > 0) {
-
-                    // HTTP Status 200 wird automatisch gesetzt.
-                    $jsonData['id'] = $id;
-
-                    return $response->withJson($jsonData);
-                }
-                else {
-
-                    return $response
-                            ->write('No Film-Quote found to update (row not found, or data are up to date).')
-                            ->withStatus(404);
-                }
-            }
-            else {
-
-                return $response->write('Error inserting in database.')->withStatus(500);
-            }
-
-        }
-        catch(Exception $e) {
-
-            return $response->write($e->getMessage())->withStatus(503);
-        }
-    }
-
-
-    /**
-     * Löscht ein Film-Quote für eine gegebene ID.
-     *
-     * @param $response  Das Response Object
-     * @param $id Die ID der Film-Quote
-     * @return Das Response Object
-     */
-    function deleteFilmQuote($response, $id) {
-
-        try {
-
-            $db = getDBConnection($response);
-
-            $stmt = $db->prepare("DELETE FROM quotes WHERE id = {$id}" );
-
-            if($stmt->execute()) {
-
-                if($stmt->rowCount() > 0) {
-
-                    return $response->withJSON(array('id' => $id));
-                }
-                else {
-
-                    return $response->write('Film-Quote not found.')->withStatus(404);
-                }
-            }
-            else {
-
-                return $response->write('Error in quering database.')->withStatus(500);
             }
         }
         catch(Exception $e) {

@@ -56,7 +56,7 @@ $(document).ready(function () {
         var toVerify = $('#Antwort').val();
         if (x + y == toVerify) {
             console.log(toVerify);
-            getReqTest();
+            createRating();
         } else {
             alert("Inkorrekter Wert. Bitte versuche es nochmals.");
         }
@@ -71,43 +71,40 @@ $(document).ready(function () {
 var restUrls = {
     testUrl :     'http://localhost:8080/hangloose/src/api/test/1',
     getRatings:   'http://localhost:8080/hangloose/src/api/ratings',
-    getRating:   'http://localhost:8080/hangloose/src/api/rating/id',
-    postRating:   'http://localhost:8080/hangloose/src/api/ratings',
-    postLocation:   'http://localhost:8080/hangloose/src/api/locations'
+    postRating:   'http://localhost:8080/hangloose/src/api/rating',
 
 };
 
 
 //REST
-function getReqTest() {
-    var lat = $('#coordinatesLocationLat').val();
-    var lng = $('#coordinatesLocationLng').val();
+function createRating() {
+    var jsonDataObj = {
+        lat         : $('#coordinatesLocationLat').val(),
+        lng         : $('#coordinatesLocationLng').val(),
+        ratPoints   : $('#rating_points').val(),
+        ratTitle    : $('#rating_title').val(),
+        ratText     : $('#rating_text').val(),
+        imgPath     : $('#rate_section').find('input[type=file]').val()
+    };
+    console.log(jsonDataObj);
 
-    var ratPoints = $('#rating_points').val();
-    var ratTitle =  $('#rating_title').val();
-    var ratText = $('#rating_text').val();
-    var imgPath = $('#rate_section').find('input[type=file]').val();
+    /* Zu Testzwekcen:
+     {
+     lat         : 8.888,
+     lng         : 4.444,
+     ratPoints   : 4,
+     ratTitle    : abc,
+     ratText     : 123,
+     imgPath     : url
+     }
+     */
 
-    console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' +ratTitle + ', ' + ratText + ', ' + imgPath);
-
-    // params: '../ratings?latitude=lat&longitude=lng'
-    var params = $.param({
-        latitude: lat,
-        longitude: lng});
-    console.log(params);
-    // source: http://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
-
-    // '& as undefined in url' - fix
-    //var params_clean  = params.replace('&', '%26');
-    //console.log(params_clean);
-
-    //Data : für JSON - Objekte
     $.ajax({
-        url: restUrls.getRatings + '?' + params_clean,
+        url: restUrls.postRating,
+        data: jsonDataObj,
         dataType: 'json',
-        type: 'GET',
+        type: 'POST',
         crossDomain: true,
-        data: JSON,
         error: function (msg) {
             console.log(msg);
             alert('transmition failed:' + msg);
