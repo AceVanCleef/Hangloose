@@ -35,25 +35,11 @@ $app->get('/film-quote/{id}', function ($request, $response, $args) {
     return getRating($response, "SELECT * FROM quotes WHERE id = {$args['id']}");
 });
 
-$app->get('/random-film-quote', function ($request, $response) {
-
-    return getRating($response, 'SELECT * FROM quotes ORDER BY RAND() LIMIT 0,1');
-});
-
 $app->post('/film-quotes', function ($request, $response) {
 
     return createFilmQuote($response, $request->getParsedBody());
 });
 
-$app->put('/film-quote/{id}', function ($request, $response, $args) {
-
-    return updateFilmQuote($response, $request->getParsedBody(), $args['id']);
-});
-
-$app->delete('/film-quote/{id}', function ($request, $response, $args) {
-
-    return deleteFilmQuote($response, $args['id']);
-});
 
 /**
  * Gibt eine Datenbank-Verbindung zurück. Falls das nicht gelingt, wird die SLIM App mit einem
@@ -74,6 +60,13 @@ function getDBConnection($response)
     }
 }
 
+/**
+ * Liest die ratings entsprechend der args aus der Datenbank.
+ *
+ * @param $response Das Response Object
+ * @param $args Die Parameter mit den Koordinaten (lat/lng)
+ * @return Das Response Object
+ */
 function getRatings($response, $args)
 {
     try {
@@ -81,46 +74,14 @@ function getRatings($response, $args)
         $selectRatings = $db->prepare("SELECT * FROM rating INNER JOIN location ON rating.RAT_LOCATION_ID = location.LOC_ID WHERE location.LOC_LAT = {$args['lat']} AND location.LOC_LNG = {$args['lng']};");
 
         if ($selectRatings->execute()) {
+            $ratings = $selectRatings->fetchAll(PDO::FETCH_ASSOC);
 
-        }
-    } catch (Exception $e) {
-
-        return $response->write($e->getMessage())->withStatus(503);
-    }
-}
-
-/**
- * Liest ensprechend dem Query aus der Datenbank.
- *
- * @param $response  Das Response Object
- * @param  Ein String mit einem gültigen SQL Query
- * @return Das Response Object
- */
-function getRating($response, $query)
-{
-
-    try {
-
-        $db = getDBConnection($response);
-
-        $selectRating = $db->prepare($query);
-
-        if ($selectRating->execute()) {
-
-            $ratings = $selectRating->fetch(PDO::FETCH_ASSOC);
-
-            if ($selectRating->rowCount() > 0) {
-
-                date_default_timezone_set(TIME_ZONE);
-                $ratings[DATE_FIELD_NAME] = date(DATE_FORMAT);
-
+            if($selectRatings->rowCount() > 0) {
                 return $response->withJson($ratings);
             } else {
-
-                return $response->write('No film-quote found.')->withStatus(404);
+                return $response->write('No rating found.')->withStatus(404);
             }
         } else {
-
             return $response->write('Error in quering database.')->withStatus(500);
         }
     } catch (Exception $e) {
@@ -128,6 +89,7 @@ function getRating($response, $query)
         return $response->write($e->getMessage())->withStatus(503);
     }
 }
+
 
 /**
  * Bindet die JSON-Daten in das Prepared Statement.
