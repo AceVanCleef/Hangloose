@@ -89,12 +89,12 @@ function createRating() {
 
     /* Zu Testzwekcen:
      {
-     lat         : 8.888,
-     lng         : 4.444,
+     lat         : 4.444,
+     lng         : 8.888,
      ratPoints   : 4,
      ratTitle    : abc,
      ratText     : 123,
-     imgPath     : url
+     imgPath     : ''
      }
      */
 
@@ -103,19 +103,9 @@ function createRating() {
     var ratText = $('#rating_text').val();
     var imgPath = $('#rate_section').find('input[type=file]').val();
 
-    console.log(lat + ', ' + lng + ', ' + ratPoints + ', ' + ratTitle + ', ' + ratText + ', ' + imgPath);
+    console.log(jsonDataObj.lat + ', ' + jsonDataObj.lng + ', ' + jsonDataObj.ratPoints + ', '
+        + jsonDataObj.ratTitle + ', ' + jsonDataObj.ratText + ', ' + jsonDataObj.imgPath);
 
-    // params: '../ratings?latitude=lat&longitude=lng'
-    var params = $.param({
-        latitude: lat,
-        longitude: lng
-    });
-    console.log(params);
-    // source: http://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
-
-    // '& as undefined in url' - fix
-    var params_clean = params.replace('&', '%26');
-    console.log(params_clean);
 
     //Data : für JSON - Objekte
     $.ajax({
@@ -125,10 +115,12 @@ function createRating() {
         type: 'POST',
         crossDomain: true,
         error: function (msg) {
+            // ToDo: jumps here after successful transmition
             console.log(msg);
             alert('transmition failed:' + msg);
         },
         success: function (data) {
+            console.log(data);
             alert(data);
         }
     });
@@ -260,7 +252,7 @@ function setLocation(pos) {
     getTideData(pos, function (msg) {
         alert("error: " + JSON.stringify(msg));
     }, function (tideData) {
-        surfPos = {
+        var surfPos = {
             lat: tideData.responseLat,
             lng: tideData.responseLon
         };
@@ -268,7 +260,8 @@ function setLocation(pos) {
         marker.setPosition(pos);
         map.setCenter(surfPos);
         showTideData(tideData);
-        showRatings({lat: 4.444, lng: 5.555});
+        //showRatings({lat: 4.444, lng: 5.555});
+        showRatings(surfPos);
     });
 }
 
