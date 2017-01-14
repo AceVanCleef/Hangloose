@@ -146,8 +146,8 @@
                         <form class="validate-form row" method="post" action="neueSeite.html">
                             <section class="col-6">
                                 <h4>Lade ein Bild dieses Surfspots hoch</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
-                                <form action="upload.php" method="post" enctype="multipart/form-data">
-                                    <input type="file" name="datei" class="btn"><br>
+                                <form>
+                                    <input type="file" id="img-upload" class="btn"><br>
                                     <input type="submit" value="Ausgewählte Datei hochladen" class="btn"/>
                                 </form>
                                 <span id="status" style="display:none">Unsubmitted</span>
