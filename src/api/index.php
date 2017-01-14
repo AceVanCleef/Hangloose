@@ -99,23 +99,43 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
 
                 //get highest ratingPK -> increment it (development device):
                 $incRatID = $db->prepare("
-                SELECT MAX(RAT_ID) FROM `rating`");
-                $highestRatID = 999999;
+                SELECT MAX(rating.RAT_ID) FROM rating");
+                $highestRatID = -1;
+                var_dump($incRatID);
+                var_dump($highestRatID);
+                var_dump($incRatID->execute());
                 if ($incRatID->execute()) {
-                    $array = $incRatID->fetch();
-                    $highestRatID = $array['RAT_ID'] + 1;
+                    $array = $incRatID->fetch(PDO::FETCH_ASSOC);
+                    var_dump($array);
+                    $highestRatID = $array['MAX(rating.RAT_ID)'] + 1;
+                    var_dump($highestRatID);
                 } else {
-                    --$highestRatID;
+                    return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
                 }
-
+                var_dump($json_data['imgPath']);
+                if (!$json_data['imgPath']){    //if(empty string) set to null
+                    $json_data['imgPath'] = null;
+                    var_dump($json_data['imgPath']);
+                }
                 $addRating->bindParam(":ratID", $highestRatID);
                 $addRating->bindParam(":ratTitle", $json_data['ratTitle']);
-                $addRating->bindParam(":ratComment", $json_data['ratTitle']);
+                $addRating->bindParam(":ratComment", $json_data['ratText']);
                 $addRating->bindParam(":ratLocationID", $locID);
                 $addRating->bindParam(":ratPoints", $json_data['ratPoints']);
                 $addRating->bindParam(":ratPicturePath", $json_data['imgPath']);
 
+                var_dump($addRating);
 
+                //ToDo if( statment->execute)
+                if ($addRating->execute()) {
+                    //$jsonData['id'] = $db->lastInsertId();
+
+                    return $response->withJson($json_data, 201);
+                }
+                else {
+
+                    return $response->write('Error inserting in database.')->withStatus(500);
+                }
 
 
 
@@ -136,6 +156,8 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
 
         //return getRatings($response, $args);
     });
+
+
 
     function createRating($response, $query){
 
