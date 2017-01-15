@@ -77,7 +77,7 @@ var restUrls = {
 function validateRatingForm() {
     var errorMsg = '';
 
-    var toVerify = $('#Antwort').val();
+    var toVerify = $('#answer').val();
 
     if(x + y != toVerify) {
         errorMsg += "Captcha has not the correct value!\n";

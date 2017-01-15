@@ -145,7 +145,10 @@
     }
 
     /* Float the list items side by side */
-    ul.tab li {float: left;}
+    ul.tab li {
+        float: left;
+        min-width: 200px;
+    }
 
     /* Style the links inside the list items */
     ul.tab li a {
@@ -156,6 +159,7 @@
         text-decoration: none;
         transition: 0.3s;
         font-size: 17px;
+        min-width: 200px;
     }
 
     /* Change background color of links on hover */

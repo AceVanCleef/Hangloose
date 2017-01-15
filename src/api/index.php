@@ -241,7 +241,11 @@ function getDBConnection($response)
     }
 }
 
-
+/**
+ * saves an image file to a predefined directory on the server.
+ * @param $file mixed jpg, jpeg, png, gif
+ * @return null|string
+ */
 function addPicture($file)
 {
 

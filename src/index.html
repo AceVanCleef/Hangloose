@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hangloose </title>
+    <title>Hangloose</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,17 +13,8 @@
 
 </head>
 
-<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="js/jquery.barrating.js"></script>
-<script type="text/javascript" src="js/highcharts.js"></script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
-</script>
-<script type="text/javascript" src="js/script.js"></script>
 
 <body class="light-grey-bg">
-
 
 <header id="page_header" class="white-font grey-gradient-bg">
     <h1>HANGLOOSE </h1>
@@ -39,10 +30,9 @@
             <section id="destinationsuchen">
                 <form>
                     <fieldset>
+                        <legend>Surf Location</legend>
 
-                        <legend>Surflocation</legend>
-
-                        <!-- Text input-->
+                        <!-- location by text -->
                         <section class="row">
                             <label class="col-m-5 control-label" for="actualLocation">Your Location</label>
                             <div class="col-m-6">
@@ -51,6 +41,7 @@
                             </div>
                         </section>
 
+                        <!-- query buttons -->
                         <section class="row">
                             <div class="col-m-5"></div>
                             <div class="col-m-3">
@@ -61,7 +52,7 @@
                             </div>
                         </section>
 
-                        <!-- Text input-->
+                        <!-- location by coordinates -->
                         <section class="row">
                             <label class="col-m-5 control-label" for="coordinatesLocationLat">Coordinates</label>
                             <div class="col-m-3">
@@ -74,17 +65,16 @@
                             </div>
                         </section>
 
-                        <!-- Text input-->
+                        <!-- feedback location name -->
                         <section class="row">
                             <label class="col-m-5 control-label" for="surfspotLocation">Surfspot Location</label>
                             <div class="col-m-6">
                                 <input id="surfspotLocation" placeholder="Surfspot Location" disabled
                                        class="io-text-field" type="text">
-                                <!--<dialog id="surfspotLocation"></dialog> -->
                             </div>
                         </section>
 
-                        <!-- Text input-->
+                        <!-- feedback location coords -->
                         <section class="row">
                             <label class="col-m-5 control-label" for="coordinatesSurfspotLat">Coordinates</label>
                             <div class="col-m-3">
@@ -98,72 +88,67 @@
                         </section>
                     </fieldset>
                 </form>
-
             </section>
         </section>
 
+        <!-- google maps container -->
         <aside id="map_wrapper" class="col-6 drop-shadow"></aside>
 
 
-    </section>
+    </section><!-- END of #io_wrapper -->
+
+    <!-- wave chart -->
     <section class="row">
         <section id="wave_chart" class="col-m-12 white-bg drop-shadow">
             <div id="chartContainer"></div>
         </section>
     </section>
 
+    <!-- ratings -->
     <section class="row">
-        <section class="col-12 white-bg drop-shadow">   <!-- id="ratings_section"  entfernt -->
+        <section class="col-12 white-bg drop-shadow">
             <ul class="tab">
                 <li><a id = "readRatingsTab" href="javascript:void(0)" class="tablinks active"
-                       onclick="openRating('readRatings')">Bewertungen</a></li>
-                <li><a id="createRatingTab" href="javascript:void(0)" class="tablinks" onclick="openRating('createRating')">Gib deine
-                    Bewertung ab</a></li>
+                       onclick="openRating('readRatings')">Ratings</a></li>
+                <li><a id="createRatingTab" href="javascript:void(0)" class="tablinks" onclick="openRating('createRating')">Share Your Rating</a></li>
             </ul>
 
             <div id="readRatings" class="tabcontent">
-                <h3>Bewertungen anderer Surfer</h3>
+                <!-- defines the target front end position of ratings -->
             </div>
 
-            <div id="createRating" class="tabcontent">
-                <h3>Bewerte diesen Surfspot</h3>
-                <section id="rate_section">
-                    <form action="textarea.html" method="post">
-                        <section id="rating_points_section">
-                            <label for="rating_points">Punkte:</label>
-                            <select name="rating_points" id="rating_points">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
+            <section id="createRating" class="tabcontent">
+                <h3>Rate this surf spot</h3>
+                <form id="rate_section">
+                    <section id="rating_points_section">
+                        <label for="rating_points">Score:</label>
+                        <select name="rating_points" id="rating_points">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </section>
+                    <input id="rating_title" type="text" name="rating_title" placeholder="Title" class="text-input"/>
+                    <textarea id="rating_text" name="text" cols="45" rows="12" class="text-input"></textarea>
+                    <section class="validate-form row">
+                        <section class="col-6">
+                            <h4>Upload image (max 20MB)</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
+                            <input type="file" id="img-upload" class="btn"><br>
+                            <span id="status" style="display:none">Unsubmitted</span>
                         </section>
+                        <aside class="col-6">
+                            <h4>CAPTCHA</h4>
+                            <p>How many sharks are: <span id="no1"></span> plus <span id="no2"></span>?</p>
 
-                        <input id="rating_title" type="text" name="rating_title" placeholder="Titel" class="text-input"/>
-                        <textarea id="rating_text" name="text" cols="45" rows="12" class="text-input"></textarea>
-
-                        <form class="validate-form row" method="post" action="neueSeite.html">
-                            <section class="col-6">
-                                <h4>Upload image (max 20MB)</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
-                                <input type="file" id="img-upload" class="btn"><br>
-                                <span id="status" style="display:none">Unsubmitted</span>
-                            </section>
-                            <aside class="col-6">
-                                <h4>CAPTCHA</h4>
-                                <p>Wieviele Haifische ergeben addiert: <span id="no1"></span> plus <span id="no2"></span>?</p>
-
-                                <input name="answer" id="Antwort" pattern="7"
-                                       title="Gib hier deine Antwort ein um zu verifizieren, dass du kein Roboter bist"
-                                       placeholder="Gib eine Zahl ein" required>
-                                <input id="submit_rating" type="submit" value="Bewertung abschicken" class="btn"/>
-                            </aside>
-
-                        </form>
-                    </form>
-                </section>
-            </div>
-
+                            <input name="answer" id="answer" pattern="7"
+                                   placeholder="What is the correct answer?" required>
+                            <input id="submit_rating" type="submit" value="send_rating" class="btn"/>
+                        </aside>
+                    </section>
+                </form>
+            </section>
 
         </section>
     </section>
@@ -171,10 +156,17 @@
 </main>
 
 <footer id="page_footer" class="white-font mid-grey-bg">
-    <p>
-        <a href="http://www.fhnw.ch" target="”_blank”" title="Hier gehts zum Modulbeschrieb">© FHNW 2017 by Team Hangloose</a>
-    </p>
+    <p><a href="http://www.fhnw.ch" target="”_blank”">© FHNW 2017 by Team Hangloose</a></p>
 </footer>
+
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="js/jquery.barrating.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD80GE_Hao6CvQvgzg5TWo6HVb7lQXWoj0&callback=initMap">
+</script>
+<script type="text/javascript" src="js/script.js"></script>
 
 </body>
 </html>
