@@ -1,209 +1,220 @@
 <?php
 
 
-    require '../vendor/autoload.php';
-    require('api_config.php');
+require '../vendor/autoload.php';
+require('api_config.php');
 
-/*
+/**
  * REST
  *
  *      Neue Bewertung anlegen:     /api/rating             (POST)
  *      Bewertungen abfragen:       /api/ratings/lat/lng    (GET)
  *
- * */
+ */
 
 
 $app = new \Slim\App();
 
 
-    /**
-     * Die SLIM Routes.
-     */
+/**
+ * Die SLIM Routes.
+ */
+
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
     return getRatings($response, $args);
 });
 
 
-    $app->post('/rating', function($request, $response) {
-        $json_data = $request->getParsedBody();
+$app->post('/rating', function ($request, $response) {
+    var_dump(json_decode($request->getParam('jsonDataObj')));
+    $json_data = json_decode($request->getParam('jsonDataObj'), true);
 
-        return createRating($response, $json_data);
-    });
+    //var_dump($request->getUploadedFiles());
+    return createRating($response, $json_data);
+});
 
-    /** checks whether a location already exists in the DB.
-     * @param $stmt PDO query statement
-     * @return bool location does or does not exist.
-     */
-    function checkLocation($stmt) {
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
+/** checks whether a location already exists in the DB.
+ * @param $stmt PDO query statement
+ * @return bool location does or does not exist.
+ */
+function checkLocation($stmt)
+{
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
 
-    /** returns a statement with lat and lng bound to it.
-     * @param $stmt PDO prepared statement
-     * @param $json_data  PDO   HTTP body data
-     * @return mixed    statement with bound params
-     */
-    function bindLatAndLng($stmt, $json_data){
-        $stmt->bindParam(':latitude', $json_data['lat']);
-        $stmt->bindParam(':longitude', $json_data['lng']);
-        return $stmt;
-    }
+/** returns a statement with lat and lng bound to it.
+ * @param $stmt PDO prepared statement
+ * @param $json_data  PDO   HTTP body data
+ * @return mixed    statement with bound params
+ */
+function bindLatAndLng($stmt, $json_data)
+{
+    $stmt->bindParam(':latitude', $json_data['lat']);
+    $stmt->bindParam(':longitude', $json_data['lng']);
+    return $stmt;
+}
 
-    /** returns RAT_ID of a new rating.
-     * @param $response
-     * @param $db   PDO connection to DB.
-     * @return mixed RAT_ID primary key
-     */
-    function prepareRatID_PK($response, $db) {
-        $highestRatID = 0;
-        $stmt = $db->prepare("
+/** returns RAT_ID of a new rating.
+ * @param $response
+ * @param $db   PDO connection to DB.
+ * @return mixed RAT_ID primary key
+ */
+function prepareRatID_PK($response, $db)
+{
+    $highestRatID = 0;
+    $stmt = $db->prepare("
                 SELECT MAX(rating.RAT_ID) FROM rating");
 
-        if ($stmt->execute()) {
-            $array = $stmt->fetch(PDO::FETCH_ASSOC);
-            $highestRatID = $array['MAX(rating.RAT_ID)'];
-        } else {
-            return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
-        }
-        return ++$highestRatID;
+    if ($stmt->execute()) {
+        $array = $stmt->fetch(PDO::FETCH_ASSOC);
+        $highestRatID = $array['MAX(rating.RAT_ID)'];
+    } else {
+        return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
     }
+    return ++$highestRatID;
+}
 
 
-    /** returns LOC_ID of a new location.
-     * @param $response
-     * @param $db PDO connection to DB
-     * @return mixed LOC_ID primary key
-     */
-    function prepareLocID_PK($response, $db) {
-        $highestLocID = 0;
-        $stmt = $db->prepare("
+/** returns LOC_ID of a new location.
+ * @param $response
+ * @param $db PDO connection to DB
+ * @return mixed LOC_ID primary key
+ */
+function prepareLocID_PK($response, $db)
+{
+    $highestLocID = 0;
+    $stmt = $db->prepare("
                 SELECT MAX(location.LOC_ID) FROM location");
-        if ($stmt->execute()) {
-            $array = $stmt->fetch(PDO::FETCH_ASSOC);
-            $highestLocID = $array['MAX(location.LOC_ID)'];
-        } else {
-            return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
-        }
-        return ++$highestLocID;
+    if ($stmt->execute()) {
+        $array = $stmt->fetch(PDO::FETCH_ASSOC);
+        $highestLocID = $array['MAX(location.LOC_ID)'];
+    } else {
+        return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
     }
+    return ++$highestLocID;
+}
 
-    /** returns the image url unchanged or replaces empty url strings with null.
-     * @param $string   String image url
-     * @return null
-     */
-    function replaceEmptyStr($string) {
-        if (!$string){    //if(empty string) set to null
-            $string = null;
-        }
-        return $string;
+/** returns the image url unchanged or replaces empty url strings with null.
+ * @param $string   String image url
+ * @return null
+ */
+function replaceEmptyStr($string)
+{
+    if (!$string) {    //if(empty string) set to null
+        $string = null;
     }
+    return $string;
+}
 
 
-    /** returns a PDO prepared statement insert query.
-     * @param $db PDO connection to DB.
-     * @return mixed statement
-     */
-    function prepareInsertRating($db) {
-        return $db->prepare("
+/** returns a PDO prepared statement insert query.
+ * @param $db PDO connection to DB.
+ * @return mixed statement
+ */
+function prepareInsertRating($db)
+{
+    return $db->prepare("
                     INSERT INTO rating (RAT_ID, RAT_TITLE, RAT_COMMENT, RAT_LOCATION_ID, RAT_POINTS, RAT_PICTURE_PATH)
                     VALUES (:ratID, :ratTitle, :ratComment, :ratLocationID, :ratPoints, :ratPicturePath);
                 ");
-    }
+}
 
-    /** binds parameters to PDO insert statement and returns the statement.
-     * @param $stmt PDO statement
-     * @param $json_data
-     * @param $ratID_PK String RAT_ID
-     * @param $locID_FK String LOC_ID
-     * @return mixed PDO statement with bound parameters.
-     */
-    function bindRatingParams($stmt, $json_data, $ratID_PK, $locID_FK) {
-        $stmt->bindParam(":ratID", $ratID_PK);
-        $stmt->bindParam(":ratTitle", $json_data['ratTitle']);
-        $stmt->bindParam(":ratComment", $json_data['ratText']);
-        $stmt->bindParam(":ratLocationID", $locID_FK);
-        $stmt->bindParam(":ratPoints", $json_data['ratPoints']);
-        $stmt->bindParam(":ratPicturePath", $json_data['imgPath']);
-        return $stmt;
-    }
+/** binds parameters to PDO insert statement and returns the statement.
+ * @param $stmt PDO statement
+ * @param $json_data
+ * @param $ratID_PK String RAT_ID
+ * @param $locID_FK String LOC_ID
+ * @return mixed PDO statement with bound parameters.
+ */
+function bindRatingParams($stmt, $json_data, $ratID_PK, $locID_FK)
+{
+    $stmt->bindParam(":ratID", $ratID_PK);
+    $stmt->bindParam(":ratTitle", $json_data['ratTitle']);
+    $stmt->bindParam(":ratComment", $json_data['ratText']);
+    $stmt->bindParam(":ratLocationID", $locID_FK);
+    $stmt->bindParam(":ratPoints", $json_data['ratPoints']);
+    $stmt->bindParam(":ratPicturePath", $json_data['imgPath']);
+    return $stmt;
+}
 
 
-    /** creates a database rating entry and checks if the corresponding location already exists.
-     *  If not, a location entry will also be created.
-     * @param $response mixed Slim response obj.
-     * @param $json_data mixed HTTP body content
-     * @return mixed
-     */
-    function createRating($response, $json_data){
-        try {
-            $db = getDBConnection($response);
+/** creates a database rating entry and checks if the corresponding location already exists.
+ *  If not, a location entry will also be created.
+ * @param $response mixed Slim response obj.
+ * @param $json_data mixed HTTP body content
+ * @return mixed
+ */
+function createRating($response, $json_data)
+{
+    try {
+        $db = getDBConnection($response);
 
-            $checkLocQuery = $db->prepare("SELECT *
+        $checkLocQuery = $db->prepare("SELECT *
                         FROM location
                         WHERE LOC_LAT = :latitude AND LOC_LNG = :longitude");
-            $checkLocQuery = bindLatAndLng($checkLocQuery, $json_data);
+        $checkLocQuery = bindLatAndLng($checkLocQuery, $json_data);
 
 
-            // check whether location already exists
-            if( checkLocation($checkLocQuery) ){
-                // location exists. Store the rating with the foreign key pointing to that location
-                $location = $checkLocQuery->fetch(PDO::FETCH_ASSOC);
-                $locID_FK = $location['LOC_ID'];
+        // check whether location already exists
+        if (checkLocation($checkLocQuery)) {
+            // location exists. Store the rating with the foreign key pointing to that location
+            $location = $checkLocQuery->fetch(PDO::FETCH_ASSOC);
+            $locID_FK = $location['LOC_ID'];
 
-                $insertRatingQuery = prepareInsertRating($db);
-                $ratID_PK = prepareRatID_PK($response, $db);
-                $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
-                $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_FK);
+            $insertRatingQuery = prepareInsertRating($db);
+            $ratID_PK = prepareRatID_PK($response, $db);
+            $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
+            $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_FK);
 
-                if ($insertRatingQuery->execute()) {
-                    return $response->withJson($json_data, 201);
-                }
-                else {
-                    return $response->write('Error inserting in database.')->withStatus(500);
-                }
+            if ($insertRatingQuery->execute()) {
+                return $response->withJson($json_data, 201);
             } else {
-                // location doesn't exist.Store the rating AND the location,
-                //		then save the LOC_ID as FK in RAT_LOCATION_ID
-                $locID_PK = prepareLocID_PK($response, $db);
-                $ratID_PK = prepareRatID_PK($response, $db);
+                return $response->write('Error inserting in database.')->withStatus(500);
+            }
+        } else {
+            // location doesn't exist.Store the rating AND the location,
+            //		then save the LOC_ID as FK in RAT_LOCATION_ID
+            $locID_PK = prepareLocID_PK($response, $db);
+            $ratID_PK = prepareRatID_PK($response, $db);
 
-                //1st: location
-                $insertLocationQuery = $db->prepare("
+            //1st: location
+            $insertLocationQuery = $db->prepare("
                     INSERT INTO location (LOC_ID, LOC_LAT, LOC_LNG)
                     VALUES (:locID, :latitude, :longitude);
                 ");
-                $insertLocationQuery = bindLocationParams($insertLocationQuery, $json_data, $locID_PK);
+            $insertLocationQuery = bindLocationParams($insertLocationQuery, $json_data, $locID_PK);
 
-                //2nd: rating
-                $insertRatingQuery = prepareInsertRating($db);
-                $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
-                $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_PK);
+            //2nd: rating
+            $insertRatingQuery = prepareInsertRating($db);
+            $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
+            $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_PK);
 
 
-                if($insertLocationQuery->execute() && $insertRatingQuery->execute()){
-                    return $response->withJson($json_data, 201);
-                } else {
-                    return $response->write('Error inserting in database.')->withStatus(500);
-                }
+            if ($insertLocationQuery->execute() && $insertRatingQuery->execute()) {
+                return $response->withJson($json_data, 201);
+            } else {
+                return $response->write('Error inserting in database.')->withStatus(500);
             }
-        } catch (Exception $e){
-            return $response->write($e->getMessage())->withStatus(503);
         }
+    } catch (Exception $e) {
+        return $response->write($e->getMessage())->withStatus(503);
     }
+}
 
-    /** binds parameters to PDO statement and returns it.
-     * @param $stmt PDO statement
-     * @param $json_data
-     * @param $locID_PK String LOC_ID
-     * @return mixed statement with bound params.
-     */
-    function bindLocationParams($stmt, $json_data, $locID_PK) {
-        $stmt->bindParam(":locID", $locID_PK);
-        $stmt->bindParam(":latitude", $json_data['lat']);
-        $stmt->bindParam(":longitude", $json_data['lng']);
-        return $stmt;
-    }
+/** binds parameters to PDO statement and returns it.
+ * @param $stmt PDO statement
+ * @param $json_data
+ * @param $locID_PK String LOC_ID
+ * @return mixed statement with bound params.
+ */
+function bindLocationParams($stmt, $json_data, $locID_PK)
+{
+    $stmt->bindParam(":locID", $locID_PK);
+    $stmt->bindParam(":latitude", $json_data['lat']);
+    $stmt->bindParam(":longitude", $json_data['lng']);
+    return $stmt;
+}
 
 
 /**
@@ -241,7 +252,7 @@ function getRatings($response, $args)
         if ($selectRatings->execute()) {
             $ratings = $selectRatings->fetchAll(PDO::FETCH_ASSOC);
 
-            if($selectRatings->rowCount() > 0) {
+            if ($selectRatings->rowCount() > 0) {
                 return $response->withJson($ratings);
             } else {
                 return $response->write('No rating found.')->withStatus(404);

@@ -70,7 +70,7 @@ $(document).ready(function () {
 /* holds the basic REST request URLs */
 var restUrls = {
     getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
-    postRating:   'http://localhost:8080/hangloose/src/api/rating'
+    postRating: 'http://localhost:8080/hangloose/src/api/rating'
 };
 
 
@@ -79,18 +79,26 @@ var restUrls = {
  */
 function createRating() {
     var jsonDataObj = {
-        lat         : $('#coordinatesSurfspotLat').val(),
-        lng         : $('#coordinatesSurfspotLng').val(),
-        ratPoints   : $('#rating_points').val(),
-        ratTitle    : $('#rating_title').val(),
-        ratText     : $('#rating_text').val(),
-        imgPath     : $('#rate_section').find('input[type=file]').val()
+        lat: $('#coordinatesSurfspotLat').val(),
+        lng: $('#coordinatesSurfspotLng').val(),
+        ratPoints: $('#rating_points').val(),
+        ratTitle: $('#rating_title').val(),
+        ratText: $('#rating_text').val(),
+        imgPath: $('#rate_section').find('input[type=file]').val()
     };
+
+    var imageFile = $('#img-upload').prop('files')[0];
+
+    var formData = new FormData();
+    formData.append("jsonDataObj", JSON.stringify(jsonDataObj));
+    formData.append("image", imageFile);
 
     $.ajax({
         url: restUrls.postRating,
-        data: jsonDataObj,
-        dataType: 'json',
+        data: formData,
+        processData: false,
+        contentType: false,
+//        dataType: 'json',
         type: 'POST',
         crossDomain: true,
         error: function (msg) {
@@ -99,7 +107,7 @@ function createRating() {
         },
         success: function (data) {
             console.log(data);
-            showRatings({lat : data.lat , lng: data.lng});
+            showRatings({lat: data.lat, lng: data.lng});
             alert("success!");
         }
     });
@@ -299,7 +307,7 @@ function createEntry(data) {
 }
 
 function barrating() {
-    $('#readRatings select').each(function(index, select) {
+    $('#readRatings select').each(function (index, select) {
         var currentRating = $(select).data('current-rating');
         $(select).barrating({
             theme: 'fontawesome-stars',
