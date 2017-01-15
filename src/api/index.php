@@ -7,24 +7,31 @@ require('api_config.php');
 /**
  * REST
  *
- *      Neue Bewertung anlegen:     /api/rating             (POST)
- *      Bewertungen abfragen:       /api/ratings/lat/lng    (GET)
+ *      Create new rating:                      /api/rating             (POST)
+ *      Get all ratings of one location:        /api/ratings/lat/lng    (GET)
  *
  */
 
-
+/* launches slim */
 $app = new \Slim\App();
 
 
 /**
  * Die SLIM Routes.
  */
-
+/**
+ * receives a REST request and returns data to client.
+ * @return Response obj.
+ */
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
     return getRatings($response, $args);
 });
 
-
+/**
+ * receives FormData obj carrying user input and an image. Each of them will be sent to
+ * predefined helper methods.
+ * @return Response obj.
+ */
 $app->post('/rating', function ($request, $response) {
 
     $json_data = json_decode($request->getParam('jsonDataObj'), true);
@@ -223,11 +230,10 @@ function bindLocationParams($stmt, $json_data, $locID_PK)
 
 
 /**
- * Gibt eine Datenbank-Verbindung zurück. Falls das nicht gelingt, wird die SLIM App mit einem
- * 503 Error gestoppt.
- *
- * @param $response  Das Response Object
- * @return PDO  Die Datenbank-Verbindung
+ * Returns a DB connection. If this fails, a 503 error will terminate Slim.
+ * @param $response  The Response Object
+ * @return PDO the DB connection
+ * @throws Exception 503 connection failed
  */
 function getDBConnection($response)
 {
@@ -285,10 +291,9 @@ function addPicture($file)
 
 
 /**
- * Liest die ratings entsprechend der args aus der Datenbank.
- *
+ * reads the rating according the args from the DB.
  * @param $response Das Response Object
- * @param $args Die Parameter mit den Koordinaten (lat/lng)
+ * @param $args Die Parameter with the coordinates (lat/lng)
  * @return Das Response Object
  */
 function getRatings($response, $args)
@@ -316,6 +321,6 @@ function getRatings($response, $args)
 
 
 /**
- * Startet die SLIM App. Muss zuletzt im Skript aufgerufen werden.
+ * Launches the SlIM framework. Must be at the end of this script.
  */
 $app->run();
