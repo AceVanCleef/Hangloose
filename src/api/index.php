@@ -20,7 +20,6 @@ $app = new \Slim\App();
      * Die SLIM Routes.
      */
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
-
     return getRatings($response, $args);
 });
 

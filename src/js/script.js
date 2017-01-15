@@ -79,8 +79,8 @@ var restUrls = {
  */
 function createRating() {
     var jsonDataObj = {
-        lat         : $('#coordinatesLocationLat').val(),
-        lng         : $('#coordinatesLocationLng').val(),
+        lat         : $('#coordinatesSurfspotLat').val(),
+        lng         : $('#coordinatesSurfspotLng').val(),
         ratPoints   : $('#rating_points').val(),
         ratTitle    : $('#rating_title').val(),
         ratText     : $('#rating_text').val(),
@@ -272,7 +272,7 @@ function showRatings(pos) {
         type: 'GET',
         crossDomain: true,
         error: function (msg) {
-            alert(msg);
+            return 'error: ' + msg;
         },
         success: function (data) {
             table.empty();
