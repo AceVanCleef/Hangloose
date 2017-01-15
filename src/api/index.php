@@ -29,11 +29,13 @@ $app->post('/rating', function ($request, $response) {
 
     $json_data = json_decode($request->getParam('jsonDataObj'), true);
 
-    $file = $request->getUploadedFiles()["image"];
+    if(count($request->getUploadedFiles()) > 0) {
+        $file = $request->getUploadedFiles()["image"];
 
-    $imgName = addPicture($file);
+        $imgName = addPicture($file);
 
-    $json_data['imgPath'] = $imgName;
+        $json_data['imgPath'] = $imgName;
+    }
 
     return createRating($response, $json_data);
 });

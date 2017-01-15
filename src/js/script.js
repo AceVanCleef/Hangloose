@@ -53,11 +53,8 @@ $(document).ready(function () {
 
     // submit button 'Bewertung abschicken' handler
     $('#submit_rating').click(function () {
-        var toVerify = $('#Antwort').val();
-        if (x + y == toVerify) {
+        if (validateRatingForm()) {
             createRating();
-        } else {
-            alert("Inkorrekter Wert. Bitte versuche es nochmals.");
         }
     });
 
@@ -67,12 +64,53 @@ $(document).ready(function () {
 
 });
 
-/* holds the basic REST request URLs */
+/** holds the basic REST request URLs */
 var restUrls = {
     getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
     postRating: 'http://localhost:8080/hangloose/src/api/rating'
 };
 
+/**
+ * Validates rating form inputs.
+ * @returns {boolean} true if all inputs correct
+ */
+function validateRatingForm() {
+    var errorMsg = '';
+
+    var toVerify = $('#Antwort').val();
+
+    if(x + y != toVerify) {
+        errorMsg += "Captcha has not the correct value!\n";
+    }
+    if($('#rating_title').val().length == 0) {
+        errorMsg += "Title can't be empty!\n";
+    }
+
+    if($('#rating_text').val().length == 0) {
+        errorMsg += "Rating comment can't be empty!\n";
+    }
+
+    console.log($('#img-upload').prop('files').length);
+    if($('#img-upload').prop('files').length != 0) {
+        var imgExtension = $('#img-upload').val().substring(
+            $('#img-upload').val().lastIndexOf('.') + 1).toLowerCase();
+
+        if (!(imgExtension == "gif" || imgExtension == "png"
+            || imgExtension == "jpeg" || imgExtension == "jpg")) {
+            errorMsg += "File is not an image!\n";
+        }
+        else if ($('#img-upload').prop('files')[0].size/1024/1024 > 20) {
+            errorMsg += "Image is bigger than 20MB!\n";
+        }
+    }
+
+    if(errorMsg != '') {
+        alert("Form error:\n"+errorMsg);
+        return false;
+    }else {
+        return true;
+    }
+}
 
 /**
  * transfers rating input data and location coordinates to DB.
