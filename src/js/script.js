@@ -78,8 +78,8 @@ var restUrls = {
 //REST
 function createRating() {
     var jsonDataObj = {
-        lat         : $('#coordinatesLocationLat').val(),
-        lng         : $('#coordinatesLocationLng').val(),
+        lat         : $('#coordinatesSurfspotLat').val(),
+        lng         : $('#coordinatesSurfspotLat').val(),
         ratPoints   : $('#rating_points').val(),
         ratTitle    : $('#rating_title').val(),
         ratText     : $('#rating_text').val(),
@@ -121,7 +121,7 @@ function createRating() {
         },
         success: function (data) {
             console.log(data);
-            alert(data);
+            alert("success ajax" + data);
         }
     });
 }
@@ -293,7 +293,7 @@ function showRatings(pos) {
         type: 'GET',
         crossDomain: true,
         error: function (msg) {
-            alert(msg);
+            alert("showRatings" + msg);
         },
         success: function (data) {
             table.empty();

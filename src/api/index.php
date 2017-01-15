@@ -22,8 +22,6 @@ $app = new \Slim\App();
 
 
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
-    var_dump($request); //educational use (Stefan)
-    var_dump($response);
     return getRatings($response, $args);
 });
 
