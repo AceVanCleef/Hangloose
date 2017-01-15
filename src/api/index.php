@@ -29,7 +29,7 @@ $app->post('/rating', function ($request, $response) {
 
     $json_data = json_decode($request->getParam('jsonDataObj'), true);
 
-    if(count($request->getUploadedFiles()) > 0) {
+    if (count($request->getUploadedFiles()) > 0) {
         $file = $request->getUploadedFiles()["image"];
 
         $imgName = addPicture($file);
@@ -251,10 +251,10 @@ function addPicture($file)
 
     $target_dir = "../img/ratings/";
 
-    if(count(scandir($target_dir)) > 3) { // 2 cause of . and ..
+    if (count(scandir($target_dir)) > 3) { // 2 cause of . and ..
         $lastImgIndex = (int)pathinfo(scandir($target_dir, SCANDIR_SORT_DESCENDING)[0])['filename'];
         $lastImgIndex++;
-    }else{
+    } else {
         $lastImgIndex = 0;
     }
 

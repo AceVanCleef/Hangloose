@@ -1,4 +1,14 @@
-var marker, surfMarker, map, chart, geocoder;
+/**
+ * Global variables
+ */
+var marker, surfMarker, map, chart, geocoder, captchaX, captchaY;
+
+/** holds the basic REST request URLs */
+var restUrls = {
+    getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
+    postRating: 'http://localhost:8080/hangloose/src/api/rating'
+};
+
 
 $(document).ready(function () {
 
@@ -6,23 +16,29 @@ $(document).ready(function () {
     initAutocomplete();
     initCaptcha();
 
-    // show "Bewertungen" tab
     $('#readRatings').show();
 
-    // Clickhandler find My Location
+
+    $('#rating_points').barrating({
+        theme: 'fontawesome-stars'
+    });
+
+    /** Eventhandlers */
+
+    // My Location
     $(document.body).find('main').on('click', '#location_button', function () {
         event.preventDefault();
         getGeolocation();
     });
 
-    // Clickhandler search destination with a query
+    // search destination
     $(document.body).find('#destinationsuchen').on('click', '#search_button', function (event) {
         event.preventDefault();
         var location = $('#actualLocation').val();
         geocodeAddress(location, geocoder);
     });
 
-    // Listener for changes in coordinates latitude
+    // Listen for changes in coordinates latitude
     $('#coordinatesLocationLng').change(function () {
         var lng = $(this).val();
         if (!isNaN(lng) && lng >= -180 && lng <= 180) {
@@ -36,7 +52,7 @@ $(document).ready(function () {
         }
     });
 
-    // Listener for changes in coordinates longitude
+    // Listen for changes in coordinates longitude
     $('#coordinatesLocationLat').change(function () {
         var lat = $(this).val();
         if (!isNaN(lat) && lat >= -85.05115 && lat <= 85) {
@@ -51,24 +67,14 @@ $(document).ready(function () {
     });
 
 
-    // submit button 'Bewertung abschicken' handler
+    // submit button
     $('#submit_rating').click(function () {
         if (validateRatingForm()) {
             createRating();
         }
     });
-
-    $('#rating_points').barrating({
-        theme: 'fontawesome-stars'
-    });
-
 });
 
-/** holds the basic REST request URLs */
-var restUrls = {
-    getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
-    postRating: 'http://localhost:8080/hangloose/src/api/rating'
-};
 
 /**
  * Validates rating form inputs.
@@ -79,18 +85,18 @@ function validateRatingForm() {
 
     var toVerify = $('#answer').val();
 
-    if(x + y != toVerify) {
+    if (captchaX + captchaY != toVerify) {
         errorMsg += "Captcha has not the correct value!\n";
     }
-    if($('#rating_title').val().length == 0) {
+    if ($('#rating_title').val().length == 0) {
         errorMsg += "Title can't be empty!\n";
     }
 
-    if($('#rating_text').val().length == 0) {
+    if ($('#rating_text').val().length == 0) {
         errorMsg += "Rating comment can't be empty!\n";
     }
 
-    if($('#img-upload').prop('files').length != 0) {
+    if ($('#img-upload').prop('files').length != 0) {
         var imgExtension = $('#img-upload').val().substring(
             $('#img-upload').val().lastIndexOf('.') + 1).toLowerCase();
 
@@ -98,15 +104,15 @@ function validateRatingForm() {
             || imgExtension == "jpeg" || imgExtension == "jpg")) {
             errorMsg += "File is not an image!\n";
         }
-        else if ($('#img-upload').prop('files')[0].size/1024/1024 > 20) {
+        else if ($('#img-upload').prop('files')[0].size / 1024 / 1024 > 20) {
             errorMsg += "Image is bigger than 20MB!\n";
         }
     }
 
-    if(errorMsg != '') {
-        alert("Form error:\n"+errorMsg);
+    if (errorMsg != '') {
+        alert("Form error:\n" + errorMsg);
         return false;
-    }else {
+    } else {
         return true;
     }
 }
@@ -144,10 +150,22 @@ function createRating() {
             showRatings({lat: data.lat, lng: data.lng});
             openRating('readRatings');
             $('#readRatingsTab').addClass("active");
+            emptyForm();
         }
     });
 }
 
+/**
+ * Empty the rating form.
+ */
+function emptyForm() {
+    $('#rating_points').barrating('clear');
+    $('#rating_title').val("");
+    $('#rating_text').val("");
+    $('#img-upload').val("");
+    $('#Antwort').val("");
+    initCaptcha();
+}
 
 /**
  * Initialize a Google Maps into the section with Geolocation. Called by script initialisation.
@@ -253,15 +271,11 @@ function initChart() {
 /**
  * Places the captcha numbers.
  */
-var x;
-var y;
 function initCaptcha() {
-    x = Math.floor((Math.random() * 10) + 1);
-    y = Math.floor((Math.random() * 10) + 1);
-    var no1 = makenumber(x);
-    var no2 = makenumber(y);
-    var ans = x + y;
-    //document.getElementById('Antwort').pattern = ans;
+    captchaX = Math.floor((Math.random() * 10) + 1);
+    captchaY = Math.floor((Math.random() * 10) + 1);
+    var no1 = makeNumber(captchaX);
+    var no2 = makeNumber(captchaY);
     document.getElementById("no1").innerHTML = no1;
     document.getElementById("no2").innerHTML = no2;
 }
@@ -309,12 +323,15 @@ function showTideData(tideData) {
  */
 function showRatings(pos) {
     var table = $(document.body).find('#readRatings');
+    console.log(pos);
     $.ajax({
         url: restUrls.getRatings + pos.lat + '/' + pos.lng,
         dataType: 'json',
         type: 'GET',
         crossDomain: true,
         error: function (msg) {
+            table.empty();
+            table.append("There are no ratings yet. You're welcome to add a new one.")
             return 'error: ' + msg;
         },
         success: function (data) {
@@ -327,6 +344,11 @@ function showRatings(pos) {
     });
 }
 
+/**
+ * prepares the html representation of a rating.
+ * @param data a rating
+ * @returns {string} DOM representation of a rating.
+ */
 function createEntry(data) {
     var imgHidden = '', imgPath = data.RAT_PICTURE_PATH;
 
@@ -347,6 +369,9 @@ function createEntry(data) {
     return article;
 }
 
+/**
+ * initializes barrating plugin for each <selection> element of ratings.
+ */
 function barrating() {
     $('#readRatings select').each(function (index, select) {
         var currentRating = $(select).data('current-rating');
@@ -457,21 +482,24 @@ function setChartData(chartData) {
 
 
 /**
- * Generate text out of a number.
+ * returns String name of this number
  * @param numb number between 1-10
  * @returns {string} text of number
  */
-function makenumber(numb) {
-    if (numb == 1)return "Eins";
-    if (numb == 2)return "Zwei";
-    if (numb == 3)return "Drei";
-    if (numb == 4)return "Vier";
-    if (numb == 5)return "Fünf";
-    if (numb == 6)return "Sechs";
-    if (numb == 7)return "Sieben";
-    if (numb == 8)return "Acht";
-    if (numb == 9)return "Neun";
-    if (numb == 10)return "Zehn";
+function makeNumber(numb) {
+    switch (numb) {
+        case 1:     return "one"; break;
+        case 2:     return "two"; break;
+        case 3:     return "three"; break;
+        case 4:     return "four"; break;
+        case 5:     return "five"; break;
+        case 6:     return "six"; break;
+        case 7:     return "seven"; break;
+        case 8:     return "eight"; break;
+        case 9:     return "nine"; break;
+        case 10:     return "ten"; break;
+        default:    return "NR generation failed.";
+    }
 }
 
 /**
