@@ -27,7 +27,7 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
 
     $app->post('/rating', function($request, $response) {
         $json_data = $request->getParsedBody();
-        
+
         return createRating($response, $json_data);
     });
 
