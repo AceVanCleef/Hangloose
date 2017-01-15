@@ -55,7 +55,8 @@ $(document).ready(function () {
     $('#submit_rating').click(function () {
         var toVerify = $('#Antwort').val();
         if (x + y == toVerify) {
-            createRating();
+            var imgPath = handleImg();
+            //createRating(imgPath); //ToDo: remove comment '//'
         } else {
             alert("Inkorrekter Wert. Bitte versuche es nochmals.");
         }
@@ -73,18 +74,61 @@ var restUrls = {
     postRating:   'http://localhost:8080/hangloose/src/api/rating'
 };
 
+// checks file type, if is img -> send to server for saving. gets url back and returns it.
+function handleImg() {
+// 1. get file. 2. check file type (png, jpg). 3. send img to backend and save it. return url 4. return url
+    var imgPath = '';
+
+    var imageFile = $('#img-upload').prop('files')[0];
+
+    var formData = null;
+
+    console.log((imageFile['type'] === 'image/jpeg' || imageFile['type'] === 'image/png') +
+    " <- MIME - Type: " + imageFile['type'] );
+    // comparing MIME type
+    if ( imageFile['type'] === 'image/jpeg' || imageFile['type'] === 'image/png') {
+        console.log('within if');
+
+        formData = new FormData();
+        formData.append("image", imageFile);
+
+        $.ajax({
+            url: "ajax_php_file.php", // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: formData,           // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,
+            error: function (msg) {
+                console.log(msg);
+                alert('sending img to server failed:' + msg);
+            },
+            success: function (data) {
+                console.log(data);
+                //imgPath = ;
+                alert("img url returned from server!");
+            }
+        });
+    }
+
+    console.log(formData);
+    console.log('imgPath = ' + imgPath);
+
+    return imgPath;
+}
+
 
 /**
  * transfers rating input data and location coordinates to DB.
  */
-function createRating() {
+function createRating(imgPath) {
     var jsonDataObj = {
         lat         : $('#coordinatesSurfspotLat').val(),
         lng         : $('#coordinatesSurfspotLng').val(),
         ratPoints   : $('#rating_points').val(),
         ratTitle    : $('#rating_title').val(),
         ratText     : $('#rating_text').val(),
-        imgPath     : $('#rate_section').find('input[type=file]').val()
+        imgPath     : imgPath
     };
 
     $.ajax({
