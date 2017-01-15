@@ -79,18 +79,18 @@ function validateRatingForm() {
 
     var toVerify = $('#Antwort').val();
 
-    if(x + y != toVerify) {
+    if (x + y != toVerify) {
         errorMsg += "Captcha has not the correct value!\n";
     }
-    if($('#rating_title').val().length == 0) {
+    if ($('#rating_title').val().length == 0) {
         errorMsg += "Title can't be empty!\n";
     }
 
-    if($('#rating_text').val().length == 0) {
+    if ($('#rating_text').val().length == 0) {
         errorMsg += "Rating comment can't be empty!\n";
     }
 
-    if($('#img-upload').prop('files').length != 0) {
+    if ($('#img-upload').prop('files').length != 0) {
         var imgExtension = $('#img-upload').val().substring(
             $('#img-upload').val().lastIndexOf('.') + 1).toLowerCase();
 
@@ -98,15 +98,15 @@ function validateRatingForm() {
             || imgExtension == "jpeg" || imgExtension == "jpg")) {
             errorMsg += "File is not an image!\n";
         }
-        else if ($('#img-upload').prop('files')[0].size/1024/1024 > 20) {
+        else if ($('#img-upload').prop('files')[0].size / 1024 / 1024 > 20) {
             errorMsg += "Image is bigger than 20MB!\n";
         }
     }
 
-    if(errorMsg != '') {
-        alert("Form error:\n"+errorMsg);
+    if (errorMsg != '') {
+        alert("Form error:\n" + errorMsg);
         return false;
-    }else {
+    } else {
         return true;
     }
 }
@@ -144,10 +144,19 @@ function createRating() {
             showRatings({lat: data.lat, lng: data.lng});
             openRating('readRatings');
             $('#readRatingsTab').addClass("active");
+            emptyForm();
         }
     });
 }
 
+function emptyForm() {
+    $('#rating_points').barrating('clear');
+    $('#rating_title').val("");
+    $('#rating_text').val("");
+    $('#img-upload').val("");
+    $('#Antwort').val("");
+    initCaptcha();
+}
 
 /**
  * Initialize a Google Maps into the section with Geolocation. Called by script initialisation.
