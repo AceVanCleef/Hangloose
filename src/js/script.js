@@ -293,7 +293,7 @@ function showRatings(pos) {
         type: 'GET',
         crossDomain: true,
         error: function (msg) {
-            alert("showRatings" + msg);
+            return 'error: ' + msg;
         },
         success: function (data) {
             table.empty();
