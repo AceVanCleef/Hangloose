@@ -19,33 +19,20 @@ $app = new \Slim\App();
     /**
      * Die SLIM Routes.
      */
-
-
 $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
-    var_dump($request); //educational use (Stefan)
-    var_dump($response);
+
     return getRatings($response, $args);
 });
 
 
-    // Stefan
     $app->post('/rating', function($request, $response) {
         $json_data = $request->getParsedBody();
-        var_dump('$json_data: ');
-        var_dump($json_data);
-        var_dump('----------------');
 
         //fixed test values:
-        $json_data['lat'] = (double) 3.333;             //necessary type conversion?    -> @DB: double
-        $json_data['lng'] = (double) 2.222;
-        var_dump( $json_data['lng']);
-        var_dump($json_data);
+        $json_data['lat'] = (double) 12.777;             //necessary type conversion?    -> @DB: double
+        $json_data['lng'] = (double) 12.222;
 
-        //ToDo: replace $json_data with $request->getParsedBody()
         return createRating($response, $json_data);
-
-
-        //return getRatings($response, $args);
     });
 
     /** checks whether a location already exists in the DB.
@@ -53,14 +40,7 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return bool location does or does not exist.
      */
     function checkLocation($stmt) {
-        var_dump("-> entering checkLocation");
-        // check whether location already exists
-        //var_dump($stmt->execute());
         $stmt->execute();
-        var_dump($stmt);
-        var_dump('is it here?');
-        var_dump($stmt->rowCount() > 0 );
-        // check whether location already exists
         return $stmt->rowCount() > 0;
     }
 
@@ -81,17 +61,13 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return mixed RAT_ID primary key
      */
     function prepareRatID_PK($response, $db) {
-        var_dump("-> prepareRatID_PK()");
         $highestRatID = 0;
         $stmt = $db->prepare("
                 SELECT MAX(rating.RAT_ID) FROM rating");
-        var_dump($stmt);
-        var_dump($stmt->execute());
+
         if ($stmt->execute()) {
             $array = $stmt->fetch(PDO::FETCH_ASSOC);
-            var_dump($array);
             $highestRatID = $array['MAX(rating.RAT_ID)'];
-            var_dump($highestRatID);
         } else {
             return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
         }
@@ -105,17 +81,12 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return mixed LOC_ID primary key
      */
     function prepareLocID_PK($response, $db) {
-        var_dump("-> prepareLocID_PK()");
         $highestLocID = 0;
         $stmt = $db->prepare("
                 SELECT MAX(location.LOC_ID) FROM location");
-        var_dump($stmt);
-        var_dump($stmt->execute());
         if ($stmt->execute()) {
             $array = $stmt->fetch(PDO::FETCH_ASSOC);
-            var_dump($array);
             $highestLocID = $array['MAX(location.LOC_ID)'];
-            var_dump($highestLocID);
         } else {
             return $response->write('Error finding MAX(rating.RAT_ID) in database.')->withStatus(500);
         }
@@ -127,11 +98,8 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return null
      */
     function replaceEmptyStr($string) {
-        var_dump("-> replaceEmptyStr()");
-        var_dump($string);
         if (!$string){    //if(empty string) set to null
             $string = null;
-            var_dump($string);
         }
         return $string;
     }
@@ -142,7 +110,6 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return mixed statement
      */
     function prepareInsertRating($db) {
-        var_dump("-> prepareInsertRating()");
         return $db->prepare("
                     INSERT INTO rating (RAT_ID, RAT_TITLE, RAT_COMMENT, RAT_LOCATION_ID, RAT_POINTS, RAT_PICTURE_PATH)
                     VALUES (:ratID, :ratTitle, :ratComment, :ratLocationID, :ratPoints, :ratPicturePath);
@@ -174,7 +141,6 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
      * @return mixed
      */
     function createRating($response, $json_data){
-        var_dump("entering createRating");
         try {
             $db = getDBConnection($response);
 
@@ -188,46 +154,25 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
             if( checkLocation($checkLocQuery) ){
                 // location exists. Store the rating with the foreign key pointing to that location
                 $location = $checkLocQuery->fetch(PDO::FETCH_ASSOC);
-                var_dump('or here?');
-                var_dump($location);
-                //get LOC_ID
                 $locID_FK = $location['LOC_ID'];
-                var_dump($locID_FK);
 
-                //prepare statement: TABLE rating
                 $insertRatingQuery = prepareInsertRating($db);
-                var_dump($insertRatingQuery);
-
-                //get highest ratingID -> is new Primary Key:
                 $ratID_PK = prepareRatID_PK($response, $db);
-                var_dump($ratID_PK);
-
                 $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
-                var_dump($json_data['imgPath']);
-
                 $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_FK);
-                var_dump($insertRatingQuery);
 
                 if ($insertRatingQuery->execute()) {
-
                     return $response->withJson($json_data, 201);
                 }
                 else {
-
                     return $response->write('Error inserting in database.')->withStatus(500);
                 }
             } else {
                 // location doesn't exist.Store the rating AND the location,
                 //		then save the LOC_ID as FK in RAT_LOCATION_ID
-                var_dump("location doesn't exist");
-
-                // LOC_ID and RAT_ID -> new primary keys
                 $locID_PK = prepareLocID_PK($response, $db);
                 $ratID_PK = prepareRatID_PK($response, $db);
-                var_dump($locID_PK);
-                var_dump($ratID_PK);
 
-                // if no, store the rating AND the location
                 //1st: location
                 $insertLocationQuery = $db->prepare("
                     INSERT INTO location (LOC_ID, LOC_LAT, LOC_LNG)
@@ -235,26 +180,17 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
                 ");
                 $insertLocationQuery = bindLocationParams($insertLocationQuery, $json_data, $locID_PK);
 
-
                 //2nd: rating
                 $insertRatingQuery = prepareInsertRating($db);
                 $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
                 $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_PK);
 
-                var_dump($insertLocationQuery);
-                var_dump($insertRatingQuery);
-                var_dump($insertLocationQuery->execute() && $insertRatingQuery->execute());
-
-
 
                 if($insertLocationQuery->execute() && $insertRatingQuery->execute()){
-                    var_dump("got in here");
                     return $response->withJson($json_data, 201);
                 } else {
-                    var_dump("in the end, it failed.");
                     return $response->write('Error inserting in database.')->withStatus(500);
                 }
-
             }
         } catch (Exception $e){
             return $response->write($e->getMessage())->withStatus(503);

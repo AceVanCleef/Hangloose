@@ -51,11 +51,10 @@ $(document).ready(function () {
     });
 
 
-    //REST
+    // submit button 'Bewertung abschicken' handler
     $('#submit_rating').click(function () {
         var toVerify = $('#Antwort').val();
         if (x + y == toVerify) {
-            console.log(toVerify);
             createRating();
         } else {
             alert("Inkorrekter Wert. Bitte versuche es nochmals.");
@@ -68,14 +67,16 @@ $(document).ready(function () {
 
 });
 
+/* holds the basic REST request URLs */
 var restUrls = {
-    testUrl: 'http://localhost:8080/hangloose/src/api/test/1',
     getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
     postRating:   'http://localhost:8080/hangloose/src/api/rating'
 };
 
 
-//REST
+/**
+ * transfers rating input data and location coordinates to DB.
+ */
 function createRating() {
     var jsonDataObj = {
         lat         : $('#coordinatesLocationLat').val(),
@@ -85,29 +86,7 @@ function createRating() {
         ratText     : $('#rating_text').val(),
         imgPath     : $('#rate_section').find('input[type=file]').val()
     };
-    console.log(jsonDataObj);
 
-    /* Zu Testzwekcen:
-     {
-     lat         : 4.444,
-     lng         : 8.888,
-     ratPoints   : 4,
-     ratTitle    : abc,
-     ratText     : 123,
-     imgPath     : ''
-     }
-     */
-
-    var ratPoints = $('#rating_points').val();
-    var ratTitle = $('#rating_title').val();
-    var ratText = $('#rating_text').val();
-    var imgPath = $('#rate_section').find('input[type=file]').val();
-
-    console.log(jsonDataObj.lat + ', ' + jsonDataObj.lng + ', ' + jsonDataObj.ratPoints + ', '
-        + jsonDataObj.ratTitle + ', ' + jsonDataObj.ratText + ', ' + jsonDataObj.imgPath);
-
-
-    //Data : für JSON - Objekte
     $.ajax({
         url: restUrls.postRating,
         data: jsonDataObj,
@@ -115,13 +94,13 @@ function createRating() {
         type: 'POST',
         crossDomain: true,
         error: function (msg) {
-            // ToDo: jumps here after successful transmition
             console.log(msg);
             alert('transmition failed:' + msg);
         },
         success: function (data) {
             console.log(data);
-            alert(data);
+            showRatings({lat : data.lat , lng: data.lng});
+            alert("success!");
         }
     });
 }
