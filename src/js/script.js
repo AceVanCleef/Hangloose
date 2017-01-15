@@ -90,7 +90,6 @@ function validateRatingForm() {
         errorMsg += "Rating comment can't be empty!\n";
     }
 
-    console.log($('#img-upload').prop('files').length);
     if($('#img-upload').prop('files').length != 0) {
         var imgExtension = $('#img-upload').val().substring(
             $('#img-upload').val().lastIndexOf('.') + 1).toLowerCase();
@@ -136,17 +135,15 @@ function createRating() {
         data: formData,
         processData: false,
         contentType: false,
-//        dataType: 'json',
         type: 'POST',
         crossDomain: true,
         error: function (msg) {
-            console.log(msg);
             alert('transmition failed:' + msg);
         },
         success: function (data) {
-            console.log(data);
             showRatings({lat: data.lat, lng: data.lng});
-            alert("success!");
+            openRating('readRatings');
+            $('#readRatingsTab').addClass("active");
         }
     });
 }
@@ -479,10 +476,9 @@ function makenumber(numb) {
 
 /**
  * Change Rating tabs.
- * @param evt OnClick Event der Tabs
  * @param ratingTab id der Zieldivs im DOM - Tree
  */
-function openRating(evt, ratingTab) {
+function openRating(ratingTab) {
     // Declare all variables
     var i, tabcontent, tablinks;
 
@@ -500,6 +496,6 @@ function openRating(evt, ratingTab) {
 
     // Show the current tab, and add an "active" class to the link that opened the tab
     document.getElementById(ratingTab).style.display = "block";
-    evt.currentTarget.className += " active";
+    //evt.currentTarget.className += " active";
 }
 

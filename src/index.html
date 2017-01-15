@@ -115,9 +115,9 @@
     <section class="row">
         <section class="col-12 white-bg drop-shadow">   <!-- id="ratings_section"  entfernt -->
             <ul class="tab">
-                <li><a href="javascript:void(0)" class="tablinks active"
-                       onclick="openRating(event, 'readRatings')">Bewertungen</a></li>
-                <li><a href="javascript:void(0)" class="tablinks" onclick="openRating(event, 'createRating')">Gib deine
+                <li><a id = "readRatingsTab" href="javascript:void(0)" class="tablinks active"
+                       onclick="openRating('readRatings')">Bewertungen</a></li>
+                <li><a id="createRatingTab" href="javascript:void(0)" class="tablinks" onclick="openRating('createRating')">Gib deine
                     Bewertung ab</a></li>
             </ul>
 
@@ -145,11 +145,8 @@
 
                         <form class="validate-form row" method="post" action="neueSeite.html">
                             <section class="col-6">
-                                <h4>Lade ein Bild dieses Surfspots hoch</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
-                                <form>
-                                    <input type="file" id="img-upload" class="btn"><br>
-                                    <input type="submit" value="Ausgewählte Datei hochladen" class="btn"/>
-                                </form>
+                                <h4>Upload image (max 20MB)</h4> <!-- Switched <label for="text"> to h4 due to formatting issues -->
+                                <input type="file" id="img-upload" class="btn"><br>
                                 <span id="status" style="display:none">Unsubmitted</span>
                             </section>
                             <aside class="col-6">
