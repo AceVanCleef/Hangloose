@@ -1,4 +1,14 @@
-var marker, surfMarker, map, chart, geocoder;
+/**
+ * Global variables
+ */
+var marker, surfMarker, map, chart, geocoder, captchaX, captchaY;
+
+/** holds the basic REST request URLs */
+var restUrls = {
+    getRatings: 'http://localhost:8080/hangloose/src/api/ratings/',
+    postRating: 'http://localhost:8080/hangloose/src/api/rating'
+};
+
 
 $(document).ready(function () {
 
@@ -6,23 +16,29 @@ $(document).ready(function () {
     initAutocomplete();
     initCaptcha();
 
-    // show "Bewertungen" tab
     $('#readRatings').show();
 
-    // Clickhandler find My Location
+
+    $('#rating_points').barrating({
+        theme: 'fontawesome-stars'
+    });
+
+    /** Eventhandlers */
+
+    // My Location
     $(document.body).find('main').on('click', '#location_button', function () {
         event.preventDefault();
         getGeolocation();
     });
 
-    // Clickhandler search destination with a query
+    // search destination
     $(document.body).find('#destinationsuchen').on('click', '#search_button', function (event) {
         event.preventDefault();
         var location = $('#actualLocation').val();
         geocodeAddress(location, geocoder);
     });
 
-    // Listener for changes in coordinates latitude
+    // Listen for changes in coordinates latitude
     $('#coordinatesLocationLng').change(function () {
         var lng = $(this).val();
         if (!isNaN(lng) && lng >= -180 && lng <= 180) {
@@ -32,11 +48,11 @@ $(document).ready(function () {
             });
         }
         else {
-            alert("Error: Yout input isn't a correct coordinate for latitude!");
+            alert("Error: Your input isn't a correct coordinate for latitude!");
         }
     });
 
-    // Listener for changes in coordinates longitude
+    // Listen for changes in coordinates longitude
     $('#coordinatesLocationLat').change(function () {
         var lat = $(this).val();
         if (!isNaN(lat) && lat >= -85.05115 && lat <= 85) {
@@ -49,8 +65,107 @@ $(document).ready(function () {
             alert("Error: Yout input isn't a correct coordinate for longitude!");
         }
     });
+
+
+    // submit button
+    $('#submit_rating').click(function () {
+        if (validateRatingForm()) {
+            createRating();
+        }
+    });
 });
 
+
+/**
+ * Validates rating form inputs.
+ * @returns {boolean} true if all inputs correct
+ */
+function validateRatingForm() {
+    var errorMsg = '';
+
+    var toVerify = $('#answer').val();
+
+    if (captchaX + captchaY != toVerify) {
+        errorMsg += "Captcha has not the correct value!\n";
+    }
+    if ($('#rating_title').val().length == 0) {
+        errorMsg += "Title can't be empty!\n";
+    }
+
+    if ($('#rating_text').val().length == 0) {
+        errorMsg += "Rating comment can't be empty!\n";
+    }
+
+    if ($('#img-upload').prop('files').length != 0) {
+        var imgExtension = $('#img-upload').val().substring(
+            $('#img-upload').val().lastIndexOf('.') + 1).toLowerCase();
+
+        if (!(imgExtension == "gif" || imgExtension == "png"
+            || imgExtension == "jpeg" || imgExtension == "jpg")) {
+            errorMsg += "File is not an image!\n";
+        }
+        else if ($('#img-upload').prop('files')[0].size / 1024 / 1024 > 20) {
+            errorMsg += "Image is bigger than 20MB!\n";
+        }
+    }
+
+    if (errorMsg != '') {
+        alert("Form error:\n" + errorMsg);
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * transfers rating input data and location coordinates to DB.
+ */
+function createRating() {
+    var jsonDataObj = {
+        lat: $('#coordinatesSurfspotLat').val(),
+        lng: $('#coordinatesSurfspotLng').val(),
+        ratPoints: $('#rating_points').val(),
+        ratTitle: $('#rating_title').val(),
+        ratText: $('#rating_text').val(),
+        imgPath: null
+    };
+
+    var imageFile = $('#img-upload').prop('files')[0];
+
+    var formData = new FormData();
+    formData.append("jsonDataObj", JSON.stringify(jsonDataObj));
+    formData.append("image", imageFile);
+
+    $.ajax({
+        url: restUrls.postRating,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        crossDomain: true,
+        error: function (msg) {
+            alert('transmition failed:' + msg);
+        },
+        success: function (data) {
+            showRatings({lat: data.lat, lng: data.lng});
+            openRating('readRatings');
+            $('#readRatingsTab').addClass("active");
+            emptyForm();
+        }
+    });
+}
+
+/**
+ * Empty the rating form.
+ */
+function emptyForm() {
+    $('#rating_points').barrating('clear');
+    $('#rating_title').val("");
+    $('#rating_text').val("");
+    $('#img-upload').val("");
+    $('#Antwort').val("");
+    initCaptcha();
+}
 
 /**
  * Initialize a Google Maps into the section with Geolocation. Called by script initialisation.
@@ -157,12 +272,10 @@ function initChart() {
  * Places the captcha numbers.
  */
 function initCaptcha() {
-    var x = Math.floor((Math.random() * 10) + 1);
-    var y = Math.floor((Math.random() * 10) + 1);
-    var no1 = makenumber(x);
-    var no2 = makenumber(y);
-    var ans = x + y;
-    document.getElementById('Antwort').pattern = ans;
+    captchaX = Math.floor((Math.random() * 10) + 1);
+    captchaY = Math.floor((Math.random() * 10) + 1);
+    var no1 = makeNumber(captchaX);
+    var no2 = makeNumber(captchaY);
     document.getElementById("no1").innerHTML = no1;
     document.getElementById("no2").innerHTML = no2;
 }
@@ -175,7 +288,7 @@ function setLocation(pos) {
     getTideData(pos, function (msg) {
         alert("error: " + JSON.stringify(msg));
     }, function (tideData) {
-        surfPos = {
+        var surfPos = {
             lat: tideData.responseLat,
             lng: tideData.responseLon
         };
@@ -183,6 +296,8 @@ function setLocation(pos) {
         marker.setPosition(pos);
         map.setCenter(surfPos);
         showTideData(tideData);
+        //showRatings({lat: 4.444, lng: 5.555});
+        showRatings(surfPos);
     });
 }
 
@@ -193,13 +308,79 @@ function setLocation(pos) {
 function showTideData(tideData) {
     myPos = {lat: parseFloat(tideData.requestLat), lng: parseFloat(tideData.requestLon)};
     surfPos = {lat: parseFloat(tideData.responseLat), lng: parseFloat(tideData.responseLon)};
-    $('#coordinatesLocationLat').val(myPos.lat.toFixed(3));
-    $('#coordinatesLocationLng').val(myPos.lng.toFixed(3));
-    $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(3));
-    $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(3));
+    $('#coordinatesLocationLat').val(myPos.lat.toFixed(6));
+    $('#coordinatesLocationLng').val(myPos.lng.toFixed(6));
+    $('#coordinatesSurfspotLat').val(surfPos.lat.toFixed(6));
+    $('#coordinatesSurfspotLng').val(surfPos.lng.toFixed(6));
     geocodeLatLng(geocoder, myPos, $('#actualLocation'));
     geocodeLatLng(geocoder, surfPos, $('#surfspotLocation'));
     setChartData(tideData.heights);
+}
+
+/**
+ * Displays the ratings into the frontend.
+ * @param pos coordinates
+ */
+function showRatings(pos) {
+    var table = $(document.body).find('#readRatings');
+    console.log(pos);
+    $.ajax({
+        url: restUrls.getRatings + pos.lat + '/' + pos.lng,
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true,
+        error: function (msg) {
+            table.empty();
+            table.append("There are no ratings yet. You're welcome to add a new one.")
+            return 'error: ' + msg;
+        },
+        success: function (data) {
+            table.empty();
+            data.forEach(function (e) {
+                table.append(createEntry(e));
+                barrating();
+            });
+        }
+    });
+}
+
+/**
+ * prepares the html representation of a rating.
+ * @param data a rating
+ * @returns {string} DOM representation of a rating.
+ */
+function createEntry(data) {
+    var imgHidden = '', imgPath = data.RAT_PICTURE_PATH;
+
+    if (imgPath == null) {
+        imgHidden = 'hidden';
+        imgPath = '';
+    }
+    else {
+        imgPath = 'img/ratings/' + imgPath;
+    }
+
+    var article = '<article class="row"><div class="col-m-6"><b>' +
+        data.RAT_TITLE + '</b><p>' + data.RAT_COMMENT + '</p></div><div class="col-m-2"><p><select data-current-rating="' + data.RAT_POINTS + '"  class="starrating">' +
+        '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4' +
+        '</option><option value="5">5</option></select></p></div><div class="col-m-4"><img ' + imgHidden + 'src="' + imgPath +
+        '" class="responsive-img"/></div></article>';
+
+    return article;
+}
+
+/**
+ * initializes barrating plugin for each <selection> element of ratings.
+ */
+function barrating() {
+    $('#readRatings select').each(function (index, select) {
+        var currentRating = $(select).data('current-rating');
+        $(select).barrating({
+            theme: 'fontawesome-stars',
+            readonly: true,
+            initialRating: currentRating,
+        });
+    });
 }
 
 /**
@@ -266,7 +447,7 @@ function geocodeLatLng(geocoder, pos, resultElement) {
  */
 function getTideData(pos, errorFunction, successFunction) {
     $.ajax({
-        url: 'https://www.worldtides.info/api?heights&key=9ce9447c-6193-48a6-acf4-16d43c8b0915&lat=' + pos.lat + '&lon=' + pos.lng,
+        url: 'https://www.worldtides.info/api?heights&key=a9b7587f-73a5-4b34-b643-18a493c7c3e3&lat=' + pos.lat + '&lon=' + pos.lng,
         dataType: 'json',
         type: 'GET',
         crossDomain: true,
@@ -301,29 +482,31 @@ function setChartData(chartData) {
 
 
 /**
- * Generate text out of a number.
+ * returns String name of this number
  * @param numb number between 1-10
  * @returns {string} text of number
  */
-function makenumber(numb) {
-    if (numb == 1)return "Eins";
-    if (numb == 2)return "Zwei";
-    if (numb == 3)return "Drei";
-    if (numb == 4)return "Vier";
-    if (numb == 5)return "Fünf";
-    if (numb == 6)return "Sechs";
-    if (numb == 7)return "Sieben";
-    if (numb == 8)return "Acht";
-    if (numb == 9)return "Neun";
-    if (numb == 10)return "Zehn";
+function makeNumber(numb) {
+    switch (numb) {
+        case 1:     return "one"; break;
+        case 2:     return "two"; break;
+        case 3:     return "three"; break;
+        case 4:     return "four"; break;
+        case 5:     return "five"; break;
+        case 6:     return "six"; break;
+        case 7:     return "seven"; break;
+        case 8:     return "eight"; break;
+        case 9:     return "nine"; break;
+        case 10:     return "ten"; break;
+        default:    return "NR generation failed.";
+    }
 }
 
 /**
  * Change Rating tabs.
- * @param evt OnClick Event der Tabs
  * @param ratingTab id der Zieldivs im DOM - Tree
  */
-function openRating(evt, ratingTab) {
+function openRating(ratingTab) {
     // Declare all variables
     var i, tabcontent, tablinks;
 
@@ -341,5 +524,6 @@ function openRating(evt, ratingTab) {
 
     // Show the current tab, and add an "active" class to the link that opened the tab
     document.getElementById(ratingTab).style.display = "block";
-    evt.currentTarget.className += " active";
+    //evt.currentTarget.className += " active";
 }
+
