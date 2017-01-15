@@ -84,7 +84,7 @@ function createRating() {
         ratPoints: $('#rating_points').val(),
         ratTitle: $('#rating_title').val(),
         ratText: $('#rating_text').val(),
-        imgPath: $('#rate_section').find('input[type=file]').val()
+        imgPath: null
     };
 
     var imageFile = $('#img-upload').prop('files')[0];
@@ -293,14 +293,20 @@ function showRatings(pos) {
 }
 
 function createEntry(data) {
-    var imgHidden = '';
-    if (data.RAT_PICTURE_PATH == null)
+    var imgHidden = '', imgPath = data.RAT_PICTURE_PATH;
+
+    if (imgPath == null) {
         imgHidden = 'hidden';
+        imgPath = '';
+    }
+    else {
+        imgPath = 'img/ratings/' + imgPath;
+    }
 
     var article = '<article class="row"><div class="col-m-6"><b>' +
         data.RAT_TITLE + '</b><p>' + data.RAT_COMMENT + '</p></div><div class="col-m-2"><p><select data-current-rating="' + data.RAT_POINTS + '"  class="starrating">' +
         '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4' +
-        '</option><option value="5">5</option></select></p></div><div class="col-m-4"><img ' + imgHidden + 'src="img/ratings/' + data.RAT_PICTURE_PATH +
+        '</option><option value="5">5</option></select></p></div><div class="col-m-4"><img ' + imgHidden + 'src="' + imgPath +
         '" class="responsive-img"/></div></article>';
 
     return article;

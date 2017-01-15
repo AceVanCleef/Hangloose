@@ -26,10 +26,15 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
 
 
 $app->post('/rating', function ($request, $response) {
-    var_dump(json_decode($request->getParam('jsonDataObj')));
+
     $json_data = json_decode($request->getParam('jsonDataObj'), true);
 
-    //var_dump($request->getUploadedFiles());
+    $file = $request->getUploadedFiles()["image"];
+
+    $imgName = addPicture($file);
+
+    $json_data['imgPath'] = $imgName;
+
     return createRating($response, $json_data);
 });
 
@@ -164,7 +169,6 @@ function createRating($response, $json_data)
 
             $insertRatingQuery = prepareInsertRating($db);
             $ratID_PK = prepareRatID_PK($response, $db);
-            $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
             $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_FK);
 
             if ($insertRatingQuery->execute()) {
@@ -187,7 +191,6 @@ function createRating($response, $json_data)
 
             //2nd: rating
             $insertRatingQuery = prepareInsertRating($db);
-            $json_data['imgPath'] = replaceEmptyStr($json_data['imgPath']);
             $insertRatingQuery = bindRatingParams($insertRatingQuery, $json_data, $ratID_PK, $locID_PK);
 
 
@@ -235,6 +238,45 @@ function getDBConnection($response)
         throw new Exception('Database connection could not be established.');
     }
 }
+
+
+function addPicture($file)
+{
+
+    $target_dir = "../img/ratings/";
+
+    if(count(scandir($target_dir)) > 3) { // 2 cause of . and ..
+        $lastImgIndex = (int)pathinfo(scandir($target_dir, SCANDIR_SORT_DESCENDING)[0])['filename'];
+        $lastImgIndex++;
+    }else{
+        $lastImgIndex = 0;
+    }
+
+
+    // Check if image file is a actual image or fake image
+    $check = $file->getSize();
+    if ($check == false) {
+        return null;
+    }
+
+    $imageFileType = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif"
+    ) {
+        return null;
+    }
+
+    $name = (string)$lastImgIndex . '.' . $imageFileType;
+
+    try {
+        $file->moveTo($target_dir . $name);
+        return $name;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
 
 /**
  * Liest die ratings entsprechend der args aus der Datenbank.
