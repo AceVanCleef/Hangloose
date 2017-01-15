@@ -27,11 +27,7 @@ $app->get('/ratings/{lat}/{lng}', function ($request, $response, $args) {
 
     $app->post('/rating', function($request, $response) {
         $json_data = $request->getParsedBody();
-
-        //fixed test values:
-        $json_data['lat'] = (double) 12.777;             //necessary type conversion?    -> @DB: double
-        $json_data['lng'] = (double) 12.222;
-
+        
         return createRating($response, $json_data);
     });
 
