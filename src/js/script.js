@@ -1,4 +1,7 @@
-var marker, surfMarker, map, chart, geocoder;
+/**
+ * Global variables
+ */
+var marker, surfMarker, map, chart, geocoder, x, y;
 
 $(document).ready(function () {
 
@@ -6,23 +9,29 @@ $(document).ready(function () {
     initAutocomplete();
     initCaptcha();
 
-    // show "Bewertungen" tab
     $('#readRatings').show();
 
-    // Clickhandler find My Location
+
+    $('#rating_points').barrating({
+        theme: 'fontawesome-stars'
+    });
+
+    /** Eventhandlers */
+
+    // My Location
     $(document.body).find('main').on('click', '#location_button', function () {
         event.preventDefault();
         getGeolocation();
     });
 
-    // Clickhandler search destination with a query
+    // search destination
     $(document.body).find('#destinationsuchen').on('click', '#search_button', function (event) {
         event.preventDefault();
         var location = $('#actualLocation').val();
         geocodeAddress(location, geocoder);
     });
 
-    // Listener for changes in coordinates latitude
+    // Listen for changes in coordinates latitude
     $('#coordinatesLocationLng').change(function () {
         var lng = $(this).val();
         if (!isNaN(lng) && lng >= -180 && lng <= 180) {
@@ -36,7 +45,7 @@ $(document).ready(function () {
         }
     });
 
-    // Listener for changes in coordinates longitude
+    // Listen for changes in coordinates longitude
     $('#coordinatesLocationLat').change(function () {
         var lat = $(this).val();
         if (!isNaN(lat) && lat >= -85.05115 && lat <= 85) {
@@ -51,17 +60,12 @@ $(document).ready(function () {
     });
 
 
-    // submit button 'Bewertung abschicken' handler
+    // submit button
     $('#submit_rating').click(function () {
         if (validateRatingForm()) {
             createRating();
         }
     });
-
-    $('#rating_points').barrating({
-        theme: 'fontawesome-stars'
-    });
-
 });
 
 /** holds the basic REST request URLs */
@@ -149,6 +153,9 @@ function createRating() {
     });
 }
 
+/**
+ * Empty the rating form.
+ */
 function emptyForm() {
     $('#rating_points').barrating('clear');
     $('#rating_title').val("");
@@ -262,8 +269,6 @@ function initChart() {
 /**
  * Places the captcha numbers.
  */
-var x;
-var y;
 function initCaptcha() {
     x = Math.floor((Math.random() * 10) + 1);
     y = Math.floor((Math.random() * 10) + 1);
@@ -318,12 +323,15 @@ function showTideData(tideData) {
  */
 function showRatings(pos) {
     var table = $(document.body).find('#readRatings');
+    console.log(pos);
     $.ajax({
         url: restUrls.getRatings + pos.lat + '/' + pos.lng,
         dataType: 'json',
         type: 'GET',
         crossDomain: true,
         error: function (msg) {
+            table.empty();
+            table.append("There are no ratings yet. You're welcome to add a new one.")
             return 'error: ' + msg;
         },
         success: function (data) {
